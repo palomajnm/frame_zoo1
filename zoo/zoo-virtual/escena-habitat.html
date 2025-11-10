@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoo Virtual - Hábitat Pingüinos</title>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+</head>
+<body>
+  <a-scene background="color: #87CEEB">
+    
+    <!-- Iluminación -->
+    <a-light type="ambient" color="#BBB" intensity="0.8"></a-light>
+    <a-light type="directional" color="#FFF" intensity="0.8" position="5 10 7"></a-light>
+
+    <!-- PISCINA DE AGUA -->
+    <a-entity position="0 0 -5">
+      <!-- Agua -->
+      <a-cylinder 
+        color="#1E90FF" 
+        height="0.5" 
+        radius="4" 
+        position="0 0.25 0"
+        opacity="0.7"
+        animation="property: rotation; to: 0 360 0; loop: true; dur: 30000; easing: linear">
+      </a-cylinder>
+      
+      <!-- Borde de la piscina -->
+      <a-torus 
+        color="#696969" 
+        radius="4" 
+        radius-tubular="0.2" 
+        position="0 0.5 0"
+        rotation="90 0 0">
+      </a-torus>
+    </a-entity>
+
+    <!-- ROCAS -->
+    <a-sphere 
+      color="#808080" 
+      radius="0.8"
+      position="3 0.5 -5">
+    </a-sphere>
+    
+    <a-sphere 
+      color="#696969" 
+      radius="0.6"
+      position="-3.5 0.3 -4">
+    </a-sphere>
+
+    <!-- PINGÜINO 1 (en la roca) -->
+    <a-entity position="3 1.5 -5">
+      <a-entity class="penguin" rotation="0 -30 0" id="penguin1">
+        <!-- Cuerpo -->
+        <a-sphere color="#000" radius="0.4" position="0 0.4 0"></a-sphere>
+        <a-sphere color="#FFF" radius="0.3" position="0 0.3 0.2"></a-sphere>
+        <!-- Cabeza -->
+        <a-sphere color="#000" radius="0.25" position="0 0.9 0"></a-sphere>
+        <!-- Ojos -->
+        <a-sphere color="#FFF" radius="0.08" position="-0.1 0.95 0.15"></a-sphere>
+        <a-sphere color="#FFF" radius="0.08" position="0.1 0.95 0.15"></a-sphere>
+        <!-- Pico -->
+        <a-cone color="#FFA500" radius-bottom="0.08" radius-top="0" height="0.15" 
+                position="0 0.85 0.25" rotation="90 0 0"></a-cone>
+      </a-entity>
+    </a-entity>
+
+    <!-- PINGÜINO 2 (nadando) -->
+    <a-entity id="penguin2" position="-1 0.6 -6">
+      <a-entity class="penguin" rotation="0 90 0">
+        <a-sphere color="#000" radius="0.35" position="0 0 0"></a-sphere>
+        <a-sphere color="#FFF" radius="0.25" position="0 -0.1 0.15"></a-sphere>
+        <a-sphere color="#000" radius="0.2" position="0 0.4 0"></a-sphere>
+      </a-entity>
+    </a-entity>
+
+    <!-- PINGÜINO 3 (interactivo - enlace a escena 3) -->
+    <a-entity position="0 0.5 -3">
+      <!-- Área clicable invisible GRANDE -->
+      <a-box 
+        id="clickBox"
+        class="clickable" 
+        color="#00FF00" 
+        opacity="0.3" 
+        width="2" 
+        height="2.5" 
+        depth="1.5"
+        position="0 1 0">
+      </a-box>
+      
+      <a-entity class="penguin" rotation="0 180 0">
+        <a-sphere color="#000" radius="0.5" position="0 0.5 0"></a-sphere>
+        <a-sphere color="#FFF" radius="0.4" position="0 0.4 0.25"></a-sphere>
+        <a-sphere color="#000" radius="0.3" position="0 1.1 0"></a-sphere>
+        <a-sphere color="#FFF" radius="0.1" position="-0.12 1.15 0.2"></a-sphere>
+        <a-sphere color="#FFF" radius="0.1" position="0.12 1.15 0.2"></a-sphere>
+        <a-cone color="#FFA500" radius-bottom="0.1" radius-top="0" height="0.2" 
+                position="0 1.05 0.3" rotation="90 0 0"></a-cone>
+      </a-entity>
+      
+      <!-- Indicador de interacción -->
+      <a-text 
+        id="clickText"
+        value="CLICK AQUI\nInteractuar" 
+        align="center" 
+        color="#FFD700" 
+        width="2"
+        position="0 2 0">
+      </a-text>
+    </a-entity>
+
+    <!-- PANEL DE DATOS -->
+    <a-entity position="-4 2.5 -5" rotation="0 20 0">
+      <a-plane color="#2C3E50" width="2.5" height="2" opacity="0.95"></a-plane>
+      <a-text 
+        id="dataPanel"
+        value="DATOS HABITAT\n\nTemp agua: 4°C\npH: 7.2\nPinguinos: 3\n\nProxima comida:\n15 minutos" 
+        align="center" 
+        color="#ECF0F1" 
+        width="2.3"
+        position="0 0 0.1"
+        wrap-count="25">
+      </a-text>
+    </a-entity>
+
+    <!-- INSTRUCCIONES -->
+    <a-entity position="4 2.5 -5" rotation="0 -20 0">
+      <a-plane color="#27AE60" width="2.5" height="2" opacity="0.95"></a-plane>
+      <a-text 
+        value="INSTRUCCIONES\n\n1. Observa pinguinos\n2. Panel izq: datos\n3. Click en pinguino\n   central para\n   interactuar\n\nBoton VOLVER abajo" 
+        align="center" 
+        color="#FFF" 
+        width="2.3"
+        position="0 0 0.1"
+        wrap-count="22">
+      </a-text>
+    </a-entity>
+
+    <!-- BOTÓN VOLVER -->
+    <a-entity position="4 1 -2" rotation="0 -30 0">
+      <a-box 
+        color="#E74C3C" 
+        width="1.2" 
+        height="0.5" 
+        depth="0.2"
+        class="back-button">
+      </a-box>
+      <a-text 
+        value="< VOLVER" 
+        align="center" 
+        color="#FFF" 
+        width="2"
+        position="0 0 0.15">
+      </a-text>
+    </a-entity>
+
+    <!-- SUELO -->
+    <a-plane 
+      color="#F0F8FF" 
+      rotation="-90 0 0" 
+      width="50" 
+      height="50" 
+      position="0 0 0">
+    </a-plane>
+
+    <!-- CÁMARA -->
+    <a-entity camera look-controls wasd-controls position="0 1.6 2">
+      <a-cursor
+        color="#FF0000"
+        raycaster="objects: .clickable, .back-button; far: 20"
+        fuse="false"
+        scale="2 2 2">
+      </a-cursor>
+    </a-entity>
+  </a-scene>
+
+  <!-- Scripts -->
+  <script>
+    console.log('✓ Script habitat cargado');
+    
+    // Animaciones manuales (sin errores)
+    function startAnimations() {
+      // Animar pingüino 1 (balanceo)
+      const p1 = document.querySelector('#penguin1');
+      if (p1) {
+        let angle = -5;
+        let direction = 1;
+        setInterval(() => {
+          angle += direction * 0.5;
+          if (angle > 5 || angle < -5) direction *= -1;
+          p1.setAttribute('rotation', `0 -30 ${angle}`);
+        }, 50);
+      }
+
+      // Animar pingüino 2 (nado)
+      const p2 = document.querySelector('#penguin2');
+      if (p2) {
+        let pos = -1;
+        let dir = 1;
+        setInterval(() => {
+          pos += dir * 0.02;
+          if (pos > 2 || pos < -1) dir *= -1;
+          const z = pos > 0.5 ? -4 : -6;
+          p2.setAttribute('position', `${pos} 0.6 ${z}`);
+        }, 50);
+      }
+
+      // Animar texto "CLICK AQUI"
+      const text = document.querySelector('#clickText');
+      if (text) {
+        let y = 2;
+        let dir = 1;
+        setInterval(() => {
+          y += dir * 0.01;
+          if (y > 2.3 || y < 2) dir *= -1;
+          text.setAttribute('position', `0 ${y} 0`);
+        }, 50);
+      }
+    }
+    
+    // Esperar carga
+    const scene = document.querySelector('a-scene');
+    
+    if (scene) {
+      scene.addEventListener('loaded', function() {
+        console.log('✓ Escena habitat cargada completamente');
+        
+        // Iniciar animaciones
+        startAnimations();
+        
+        // Click en pingüino
+        const clickable = document.querySelector('.clickable');
+        if (clickable) {
+          console.log('✓ Área clicable del pingüino encontrada');
+          
+          clickable.addEventListener('click', function() {
+            console.log('→ ¡CLICK DETECTADO! Navegando a interacción...');
+            window.location.href = 'escena-interaccion.html';
+          });
+          
+          // Método alternativo por si el primero falla
+          clickable.addEventListener('mousedown', function() {
+            console.log('→ MOUSEDOWN detectado, navegando...');
+            window.location.href = 'escena-interaccion.html';
+          });
+          
+          // Efecto visual al pasar el cursor
+          clickable.addEventListener('mouseenter', function() {
+            console.log('→ Cursor sobre pingüino');
+            const text = document.querySelector('#clickText');
+            if (text) {
+              text.setAttribute('color', '#FF0');
+              text.setAttribute('scale', '1.2 1.2 1.2');
+            }
+          });
+          
+          clickable.addEventListener('mouseleave', function() {
+            const text = document.querySelector('#clickText');
+            if (text) {
+              text.setAttribute('color', '#FFD700');
+              text.setAttribute('scale', '1 1 1');
+            }
+          });
+        } else {
+          console.error('❌ No se encontró el área clicable');
+        }
+
+        // Botón volver
+        const backButton = document.querySelector('.back-button');
+        if (backButton) {
+          backButton.addEventListener('click', function() {
+            console.log('← Volviendo a index');
+            window.location.href = 'index.html';
+          });
+        }
+
+        // Panel dinámico
+        function updatePanel() {
+          const panel = document.querySelector('#dataPanel');
+          if (panel) {
+            const temp = (3 + Math.random() * 2).toFixed(1);
+            const ph = (7.0 + Math.random() * 0.5).toFixed(1);
+            const now = new Date();
+            const minutos = (15 - (now.getMinutes() % 15));
+            
+            panel.setAttribute('value', 
+              `DATOS HABITAT\n\n` +
+              `Temp agua: ${temp}°C\n` +
+              `pH: ${ph}\n` +
+              `Pinguinos: 3\n` +
+              `Hora: ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}\n\n` +
+              `Proxima comida:\n${minutos} min`
+            );
+          }
+        }
+        
+        updatePanel();
+        setInterval(updatePanel, 5000);
+        
+        // Ocultar área clicable visible después de 5 segundos (solo para debug)
+        setTimeout(() => {
+          const clickBox = document.querySelector('#clickBox');
+          if (clickBox) {
+            clickBox.setAttribute('opacity', '0');
+            console.log('→ Área clicable ahora invisible (funciona igual)');
+          }
+        }, 5000);
+        
+        console.log('✓ TODO configurado correctamente');
+      });
+    }
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</body>
+</html>

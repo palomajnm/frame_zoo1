@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoo Virtual - Interacción Pingüino</title>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+</head>
+<body>
+  <a-scene background="color: #87CEEB">
+    
+    <!-- Iluminación -->
+    <a-light type="ambient" color="#BBB" intensity="0.7"></a-light>
+    <a-light type="directional" color="#FFF" intensity="0.9" position="3 5 3"></a-light>
+    <a-light type="point" color="#4A90E2" intensity="0.5" position="0 2 -2"></a-light>
+
+    <!-- PINGÜINO PRINCIPAL -->
+    <a-entity id="mainPenguin" position="0 0.5 -3">
+      <a-entity class="penguin" rotation="0 0 0">
+        <!-- Cuerpo -->
+        <a-sphere color="#000" radius="0.6" position="0 0.6 0"></a-sphere>
+        <a-sphere color="#FFF" radius="0.5" position="0 0.5 0.3"></a-sphere>
+        
+        <!-- Cabeza -->
+        <a-sphere color="#000" radius="0.35" position="0 1.4 0"></a-sphere>
+        
+        <!-- Ojos -->
+        <a-sphere color="#FFF" radius="0.12" position="-0.15 1.45 0.25"></a-sphere>
+        <a-sphere color="#FFF" radius="0.12" position="0.15 1.45 0.25"></a-sphere>
+        <a-sphere color="#000" radius="0.05" position="-0.15 1.45 0.32"></a-sphere>
+        <a-sphere color="#000" radius="0.05" position="0.15 1.45 0.32"></a-sphere>
+        
+        <!-- Pico -->
+        <a-cone color="#FFA500" radius-bottom="0.12" radius-top="0" height="0.25" 
+                position="0 1.3 0.4" rotation="90 0 0"></a-cone>
+        
+        <!-- Aletas -->
+        <a-box color="#000" width="0.15" height="0.6" depth="0.3" 
+               position="-0.65 0.6 0" rotation="0 0 -30"></a-box>
+        <a-box color="#000" width="0.15" height="0.6" depth="0.3" 
+               position="0.65 0.6 0" rotation="0 0 30"></a-box>
+        
+        <!-- Patas -->
+        <a-box color="#FFA500" width="0.25" height="0.1" depth="0.35" 
+               position="-0.25 0.05 0.2" rotation="0 -20 0"></a-box>
+        <a-box color="#FFA500" width="0.25" height="0.1" depth="0.35" 
+               position="0.25 0.05 0.2" rotation="0 20 0"></a-box>
+      </a-entity>
+      
+      <!-- Nombre -->
+      <a-text 
+        value="PINGU" 
+        align="center" 
+        color="#FFD700" 
+        width="3"
+        position="0 2.5 0">
+      </a-text>
+    </a-entity>
+
+    <!-- PECES PARA ALIMENTAR -->
+    <a-sphere id="fish1" class="clickable" position="-2 1.2 -2" radius="0.4" color="#FF6B6B">
+      <a-text value="PEZ 1\nCLICK" align="center" color="#FFF" width="2" position="0 0.6 0"></a-text>
+    </a-sphere>
+
+    <a-sphere id="fish2" class="clickable" position="2 1.2 -2" radius="0.4" color="#4ECDC4">
+      <a-text value="PEZ 2\nCLICK" align="center" color="#FFF" width="2" position="0 0.6 0"></a-text>
+    </a-sphere>
+
+    <a-sphere id="fish3" class="clickable" position="0 1.2 -1.5" radius="0.4" color="#95E1D3">
+      <a-text value="PEZ 3\nCLICK" align="center" color="#FFF" width="2" position="0 0.6 0"></a-text>
+    </a-sphere>
+
+    <!-- PANEL DE ESTADÍSTICAS -->
+    <a-entity position="-4 2.5 -4" rotation="0 20 0">
+      <a-plane color="#2C3E50" width="2.5" height="2.5" opacity="0.95"></a-plane>
+      <a-text 
+        id="statsPanel"
+        value="ESTADISTICAS\n\nNombre: Pingu\nEdad: 3 años\nPeso: 4.5 kg\n\nPeces comidos: 0/3\nFelicidad: 😐\n\n¡Alimenta a Pingu!" 
+        align="center" 
+        color="#ECF0F1" 
+        width="2.3"
+        position="0 0 0.1"
+        wrap-count="22">
+      </a-text>
+    </a-entity>
+
+    <!-- INSTRUCCIONES -->
+    <a-entity position="4 2.5 -4" rotation="0 -20 0">
+      <a-plane color="#27AE60" width="2.5" height="2" opacity="0.95"></a-plane>
+      <a-text 
+        value="INSTRUCCIONES\n\n1. Click en peces\n2. Pingu los comera\n3. Observa animacion\n4. Completa 3/3!\n\nPanel izquierdo:\nEstadisticas vivas" 
+        align="center" 
+        color="#FFF" 
+        width="2.3"
+        position="0 0 0.1"
+        wrap-count="20">
+      </a-text>
+    </a-entity>
+
+    <!-- Corazones (cuando está feliz) -->
+    <a-entity id="hearts" position="0 2 -3" visible="false">
+      <a-text value="❤️ ❤️ ❤️" color="#E74C3C" scale="1.5 1.5 1.5"></a-text>
+    </a-entity>
+
+    <!-- BOTÓN VOLVER -->
+    <a-entity position="0 1 1" rotation="0 180 0">
+      <a-box 
+        color="#E74C3C" 
+        width="1.5" 
+        height="0.5" 
+        depth="0.2"
+        class="back-button">
+      </a-box>
+      <a-text 
+        value="< VOLVER AL HABITAT" 
+        align="center" 
+        color="#FFF" 
+        width="3"
+        position="0 0 0.15">
+      </a-text>
+    </a-entity>
+
+    <!-- SUELO -->
+    <a-plane 
+      color="#F0F8FF" 
+      rotation="-90 0 0" 
+      width="30" 
+      height="30" 
+      position="0 0 0">
+    </a-plane>
+
+    <!-- CÁMARA -->
+    <a-entity camera look-controls wasd-controls position="0 1.6 3">
+      <a-cursor
+        id="cursor"
+        color="#FF0000"
+        raycaster="objects: .clickable, .back-button"
+        fuse="true"
+        fuse-timeout="1500"
+        scale="3 3 3">
+      </a-cursor>
+    </a-entity>
+  </a-scene>
+
+  <!-- Scripts -->
+  <script>
+    console.log('✓ Script interaccion cargado');
+    
+    let fishEaten = 0;
+    const maxFish = 3;
+
+    // Actualizar estadísticas
+    function updateStats() {
+      const panel = document.querySelector('#statsPanel');
+      
+      let emoji = '😐';
+      let message = '¡Alimenta a Pingu!';
+      
+      if (fishEaten === 1) {
+        emoji = '🙂';
+        message = '¡Le gusto!';
+      } else if (fishEaten === 2) {
+        emoji = '😊';
+        message = '¡Uno mas!';
+      } else if (fishEaten >= 3) {
+        emoji = '😍';
+        message = '¡COMPLETADO!';
+      }
+      
+      panel.setAttribute('value', 
+        `ESTADISTICAS\n\n` +
+        `Nombre: Pingu\n` +
+        `Edad: 3 años\n` +
+        `Peso: 4.5 kg\n\n` +
+        `Peces comidos: ${fishEaten}/${maxFish}\n` +
+        `Felicidad: ${emoji}\n\n` +
+        `${message}`
+      );
+    }
+
+    // Animación de pingüino comiendo
+    function penguinEat() {
+      const penguin = document.querySelector('#mainPenguin');
+      
+      // Salto
+      let y = 0.5;
+      let phase = 0;
+      const jumpInterval = setInterval(() => {
+        phase += 0.1;
+        y = 0.5 + Math.sin(phase * Math.PI) * 0.8;
+        penguin.setAttribute('position', `0 ${y} -3`);
+        
+        if (phase >= 1) {
+          clearInterval(jumpInterval);
+          penguin.setAttribute('position', '0 0.5 -3');
+          
+          // Rotación celebración
+          let angle = 0;
+          const rotateInterval = setInterval(() => {
+            angle += 10;
+            penguin.setAttribute('rotation', `0 ${angle} 0`);
+            
+            if (angle >= 360) {
+              clearInterval(rotateInterval);
+              penguin.setAttribute('rotation', '0 0 0');
+            }
+          }, 30);
+        }
+      }, 50);
+      
+      // Mostrar corazones si está feliz
+      if (fishEaten >= 2) {
+        const hearts = document.querySelector('#hearts');
+        hearts.setAttribute('visible', true);
+        
+        setTimeout(() => {
+          hearts.setAttribute('visible', false);
+        }, 2000);
+      }
+    }
+
+    // Función para comer pez
+    function eatFish(fish, fishNumber) {
+      console.log(`→ Comiendo pez ${fishNumber}...`);
+      
+      const startPos = fish.getAttribute('position');
+      // Posición objetivo: boca del pingüino (cabeza está en 0, 1.4, -3 aprox)
+      const targetX = 0;
+      const targetY = 1.3; // Altura de la boca
+      const targetZ = -2.7; // Un poco adelante de la cara
+      
+      let t = 0;
+      
+      const moveInterval = setInterval(() => {
+        t += 0.03;
+        
+        // Interpolación con curva (parábola para efecto más natural)
+        const x = startPos.x + (targetX - startPos.x) * t;
+        const z = startPos.z + (targetZ - startPos.z) * t;
+        // Añadir una parábola para que el pez "salte" hacia arriba antes de bajar
+        const y = startPos.y + (targetY - startPos.y) * t + Math.sin(t * Math.PI) * 0.5;
+        
+        fish.setAttribute('position', `${x} ${y} ${z}`);
+        
+        // Hacer más pequeño
+        const scale = 1 - t;
+        fish.setAttribute('scale', `${scale} ${scale} ${scale}`);
+        
+        if (t >= 1) {
+          clearInterval(moveInterval);
+          fish.setAttribute('visible', 'false');
+          fishEaten++;
+          updateStats();
+          penguinEat();
+          console.log(`✓ Pez ${fishNumber} comido! Total: ${fishEaten}/${maxFish}`);
+        }
+      }, 30);
+    }
+
+    // Esperar carga
+    const scene = document.querySelector('a-scene');
+    
+    scene.addEventListener('loaded', function() {
+      console.log('✓ Escena interaccion cargada');
+      
+      // Configurar cada pez individualmente
+      const fish1 = document.querySelector('#fish1');
+      const fish2 = document.querySelector('#fish2');
+      const fish3 = document.querySelector('#fish3');
+      
+      if (fish1) {
+        console.log('✓ Pez 1 encontrado');
+        fish1.addEventListener('click', () => {
+          if (fishEaten < maxFish) {
+            console.log('→ CLICK en PEZ 1');
+            eatFish(fish1, 1);
+          }
+        });
+      }
+      
+      if (fish2) {
+        console.log('✓ Pez 2 encontrado');
+        fish2.addEventListener('click', () => {
+          if (fishEaten < maxFish) {
+            console.log('→ CLICK en PEZ 2');
+            eatFish(fish2, 2);
+          }
+        });
+      }
+      
+      if (fish3) {
+        console.log('✓ Pez 3 encontrado');
+        fish3.addEventListener('click', () => {
+          if (fishEaten < maxFish) {
+            console.log('→ CLICK en PEZ 3');
+            eatFish(fish3, 3);
+          }
+        });
+      }
+
+      // Botón volver
+      const backButton = document.querySelector('.back-button');
+      if (backButton) {
+        console.log('✓ Botón volver encontrado');
+        backButton.addEventListener('click', function() {
+          console.log('← Volviendo a habitat');
+          window.location.href = 'escena-habitat.html';
+        });
+      }
+
+      updateStats();
+      console.log('✓ TODO configurado - Apunta a los peces y MIRA FIJAMENTE 1.5 segundos');
+    });
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</body>
+</html>
