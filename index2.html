@@ -8,13 +8,15 @@
 </head>
 <body>
   <a-scene>
-    <a-assets>
-      <img id="sky360" src="./assets/360/zoo-entrance.jpg" crossorigin="anonymous">
-      <a-asset-item id="treeModel" src="./assets/low_poly_tree_pack.glb" crossorigin="anonymous"></a-asset-item>
+    <a-assets timeout="10000">
+      <!-- Imagen 360 de fondo -->
+      <img id="sky360" src="assets/360/zoo-entrance.jpg" crossorigin="anonymous">
+      <!-- Modelo 3D de árboles -->
+      <a-asset-item id="treeModel" src="assets/models/low_poly_tree_pack.glb"></a-asset-item>
     </a-assets>
 
-    <!-- Cielo -->
-    <a-sky color="#87CEEB" material="shader: flat"></a-sky>
+    <!-- Cielo con imagen 360 -->
+    <a-sky src="#sky360"></a-sky>
 
     <!-- Iluminación mejorada -->
     <a-light type="ambient" color="#E8F4F8" intensity="0.9"></a-light>
@@ -131,13 +133,21 @@
       </a-text>
     </a-entity>
 
-    <!-- Árboles 3D distribuidos por la escena -->
-    <a-gltf-model src="#treeModel" position="5 0 -5" scale="1.5 1.5 1.5" rotation="0 45 0"></a-gltf-model>
-    <a-gltf-model src="#treeModel" position="-5 0 -5" scale="1.2 1.2 1.2" rotation="0 -30 0"></a-gltf-model>
-    <a-gltf-model src="#treeModel" position="7 0 -8" scale="1.8 1.8 1.8" rotation="0 120 0"></a-gltf-model>
-    <a-gltf-model src="#treeModel" position="-7 0 -7" scale="1.6 1.6 1.6" rotation="0 -80 0"></a-gltf-model>
-    <a-gltf-model src="#treeModel" position="3 0 -10" scale="1.3 1.3 1.3" rotation="0 200 0"></a-gltf-model>
-    <a-gltf-model src="#treeModel" position="-4 0 -9" scale="1.4 1.4 1.4" rotation="0 90 0"></a-gltf-model>
+    <!-- Árboles 3D distribuidos por la escena - MEJORADOS Y MÁS VISIBLES -->
+    <a-gltf-model src="#treeModel" position="5 0 -5" scale="3 3 3" rotation="0 45 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="-5 0 -5" scale="2.5 2.5 2.5" rotation="0 -30 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="7 0 -8" scale="3.5 3.5 3.5" rotation="0 120 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="-7 0 -7" scale="3.2 3.2 3.2" rotation="0 -80 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="3 0 -10" scale="2.8 2.8 2.8" rotation="0 200 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="-4 0 -9" scale="3 3 3" rotation="0 90 0"></a-gltf-model>
+
+    <!-- Árboles a los lados del camino - MÁS GRANDES -->
+    <a-gltf-model src="#treeModel" position="3 0 -2" scale="2.5 2.5 2.5" rotation="0 0 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="-3 0 -2" scale="2.5 2.5 2.5" rotation="0 180 0"></a-gltf-model>
+    
+    <!-- Árboles adicionales cerca del portal -->
+    <a-gltf-model src="#treeModel" position="4 0 -6" scale="2.8 2.8 2.8" rotation="0 60 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="-4 0 -6" scale="2.8 2.8 2.8" rotation="0 -60 0"></a-gltf-model>
 
     <!-- Arbustos decorativos -->
     <a-sphere color="#2E8B57" radius="0.6" position="2 0.3 -2.5" segments-height="8" segments-width="8"></a-sphere>
@@ -199,9 +209,7 @@
     <a-entity camera look-controls wasd-controls position="0 1.6 0">
       <a-cursor
         color="#4A90E2"
-        raycaster="objects: .clickable"
-        fuse="true"
-        fuse-timeout="1500">
+        raycaster="objects: .clickable">
       </a-cursor>
     </a-entity>
   </a-scene>
@@ -222,11 +230,32 @@
     if (assets) {
       assets.addEventListener('loaded', function() {
         console.log('✓ Todos los assets cargados');
+        console.log('✓ Modelo 3D: assets/models/low_poly_tree_pack.glb');
+        console.log('✓ Imagen 360: assets/360/zoo-entrance.jpg');
       });
       
       assets.addEventListener('timeout', function() {
-        console.warn('⚠ Timeout en la carga de assets');
+        console.warn('⚠ Timeout en la carga de assets - algunos recursos no se cargaron a tiempo');
+        console.warn('⚠ Verifica que existan:');
+        console.warn('   - assets/models/low_poly_tree_pack.glb');
+        console.warn('   - assets/360/zoo-entrance.jpg');
       });
+
+      // Detectar errores individuales
+      const img = document.querySelector('#sky360');
+      const model = document.querySelector('#treeModel');
+      
+      if (img) {
+        img.addEventListener('error', function() {
+          console.error('❌ Error cargando imagen 360: assets/360/zoo-entrance.jpg');
+        });
+      }
+      
+      if (model) {
+        model.addEventListener('error', function() {
+          console.error('❌ Error cargando modelo 3D: assets/models/low_poly_tree_pack.glb');
+        });
+      }
     }
 
     // Esperar a que la escena esté lista
