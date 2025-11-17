@@ -3,345 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD:zoo/zoo-virtual/index2.html
-  <title>Zoo Virtual Físico Premium</title>
-=======
-  <title>Zoo Virtual Físico - Entrada</title>
-
-<style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      font-family: 'Arial', sans-serif;
-    }
-    
-    /* Loader mientras carga */
-    .a-loader-title {
-      color: #00ffff !important;
-      font-size: 1.5em;
-    }
-  </style>
-
->>>>>>> 715983469cf8ef19d296954d8a2f6cc6d7ab5f41:index2.html
+  <title>Zoo Virtual - Entrada</title>
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 </head>
 <body>
-<<<<<<< HEAD:zoo/zoo-virtual/index2.html
-  <a-scene background="color: #87CEEB" fog="type: linear; color: #87CEEB; near: 20; far: 70">
-=======
-  <a-scene fog="type: linear; color: #87CEEB; near: 10; far: 100">
+  <a-scene>
     <a-assets>
-      <!-- Texturas -->
-      <img id="grass" src="https://cdn.aframe.io/a-painter/images/floor.jpg" alt ="Grass Texture" crossorigin="anonymous">
-      <img id="wood" src="https://cdn.glitch.global/341720a2-157f-4d6b-b2c1-40f26e3435c9/wood.jpg?v=1649794075048" alt="wood Texture" crossorigin="anonymous">
-      <img id="stone" src="https://cdn.glitch.global/341720a2-157f-4d6b-b2c1-40f26e3435c9/stone.jpg?v=1649794075048" crossorigin="anonymous">
-      <img id="metal" src="https://cdn.glitch.global/341720a2-157f-4d6b-b2c1-40f26e3435c9/metal.jpg?v=1649794075048" crossorigin="anonymous">
-      <img id="water" src="https://cdn.glitch.global/341720a2-157f-4d6b-b2c1-40f26e3435c9/water.jpg?v=1649794075048" crossorigin="anonymous">
-      
-      <!-- Sonidos ambiente -->
-      <audio id="ambient" src="https://cdn.glitch.global/341720a2-157f-4d6b-b2c1-40f26e3435c9/nature-ambience.mp3?v=1649794075048" crossorigin="anonymous"></audio>
+      <img id="sky360" src="./assets/360/zoo-entrance.jpg">
+      <a-asset-item id="treeModel" src="./assets/models/low_poly_tree_pack.glb"></a-asset-item>
     </a-assets>
 
-    <!-- Entorno realista -->
-    <a-entity environment="preset: forest; dressingAmount: 100; dressingVariance: 3 3 3; groundColor: #5a7f3b; groundColor2: #4a6f2b; grid: cross; gridColor: #3a5f1b; horizon: default; lighting: distant; shadow: true; shadowSize: 10; skyType: gradient; skyColor: #87CEEB; horizonColor: #b0e0e6"></a-entity>
+    <!-- Cielo -->
+    <a-sky src="#sky360"></a-sky>
 
-    <!-- Iluminación avanzada -->
-    <a-light type="ambient" color="#fff" intensity="0.6"></a-light>
-    <a-light type="directional" color="#fff" intensity="0.8" position="5 10 2" castShadow="true"></a-light>
-    <a-light type="point" color="#ffd700" intensity="0.5" position="0 3 -5" distance="15"></a-light>
+    <!-- Iluminación mejorada -->
+    <a-light type="ambient" color="#E8F4F8" intensity="0.9"></a-light>
+    <a-light type="directional" color="#FFF" intensity="0.7" position="5 10 7"></a-light>
+    <a-light type="point" color="#FFE87C" intensity="0.5" position="0 3 -6"></a-light>
 
-    <!-- Sonido ambiente -->
-    <a-entity sound="src: #ambient; autoplay: true; loop: true; volume: 0.3"></a-entity>
-
-    <!-- ENTRADA PRINCIPAL DEL ZOO -->
-    <a-entity id="entrance-gate" position="0 0 -8">
-      <!-- Pilares laterales con textura de piedra -->
-      <a-box src="#stone" width="1.5" height="6" depth="1.5" position="-4 3 0" 
-             shadow="cast: true; receive: true"
-             normal-map="https://cdn.glitch.global/341720a2-157f-4d6b-b2c1-40f26e3435c9/stone-normal.jpg?v=1649794075048"
-             roughness="0.8"></a-box>
-      <a-box src="#stone" width="1.5" height="6" depth="1.5" position="4 3 0" 
-             shadow="cast: true; receive: true"
-             roughness="0.8"></a-box>
+    <!-- Portal hacia Escena 2 con efectos mejorados -->
+    <a-entity position="0 1.6 -4">
+      <!-- Anillo exterior brillante -->
+      <a-torus 
+        color="#4A90E2" 
+        radius="1.3" 
+        radius-tubular="0.05" 
+        opacity="0.6"
+        animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+      </a-torus>
       
-      <!-- Arco superior con textura de madera -->
-      <a-torus src="#wood" radius="4.5" radius-tubular="0.4" position="0 5.5 0" rotation="0 0 0"
-               shadow="cast: true"
-               roughness="0.7"
-               metalness="0.1"></a-torus>
+      <!-- Portal visual principal -->
+      <a-cylinder 
+        id="portal"
+        color="#4A90E2" 
+        height="2.2" 
+        radius="1" 
+        opacity="0.6"
+        animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear"
+        animation__pulse="property: scale; from: 1 1 1; to: 1.05 1.05 1.05; loop: true; dur: 2000; dir: alternate; easing: easeInOutSine"
+        class="clickable">
+      </a-cylinder>
       
-      <!-- Letrero principal 3D -->
-      <a-entity position="0 5.5 0.3">
-        <a-plane src="#wood" width="7" height="1.8" roughness="0.7">
-          <a-text value="ZOO VIRTUAL\nEquipo 4" align="center" color="#2c1810" width="6" 
-                  position="0 0 0.05" font="roboto" letter-spacing="2"></a-text>
-        </a-plane>
-      </a-entity>
-
-      <!-- Decoración: estatuas de animales en los pilares -->
-      <a-entity position="-4 6.5 0">
-        <a-sphere color="#8B7355" radius="0.5" metalness="0.3" roughness="0.6"></a-sphere>
-        <a-cone color="#8B7355" radius-bottom="0.4" height="0.8" position="0 -0.7 0" metalness="0.3"></a-cone>
-      </a-entity>
-      <a-entity position="4 6.5 0">
-        <a-sphere color="#8B7355" radius="0.5" metalness="0.3" roughness="0.6"></a-sphere>
-        <a-cone color="#8B7355" radius-bottom="0.4" height="0.8" position="0 -0.7 0" metalness="0.3"></a-cone>
-      </a-entity>
+      <!-- Partículas decorativas alrededor del portal -->
+      <a-sphere color="#5BA3FF" radius="0.08" position="1.2 0.5 0" opacity="0.8"
+        animation="property: position; to: 1.2 1.5 0; loop: true; dur: 3000; dir: alternate; easing: easeInOutQuad">
+      </a-sphere>
+      <a-sphere color="#7EC8FF" radius="0.08" position="-1.2 -0.5 0" opacity="0.8"
+        animation="property: position; to: -1.2 0.5 0; loop: true; dur: 3500; dir: alternate; easing: easeInOutQuad">
+      </a-sphere>
+      <a-sphere color="#5BA3FF" radius="0.08" position="0 1 1" opacity="0.8"
+        animation="property: position; to: 0 2 1; loop: true; dur: 4000; dir: alternate; easing: easeInOutQuad">
+      </a-sphere>
+      
+      <!-- Texto informativo con sombra -->
+      <a-text 
+        value="HABITAT PINGUINOS" 
+        align="center" 
+        color="#FFF" 
+        width="4"
+        position="0 2.3 0"
+        font="roboto">
+      </a-text>
+      <a-text 
+        value="CLICK AQUI" 
+        align="center" 
+        color="#FFD700" 
+        width="3"
+        position="0 1.9 0"
+        animation="property: scale; from: 1 1 1; to: 1.1 1.1 1.1; loop: true; dur: 1500; dir: alternate">
+      </a-text>
+      
+      <!-- Área clicable invisible -->
+      <a-box 
+        color="#4A90E2" 
+        opacity="0" 
+        width="2.8" 
+        height="4" 
+        depth="0.5"
+        class="clickable">
+      </a-box>
     </a-entity>
 
-    <!-- PORTAL INTERACTIVO AL HABITAT -->
-    <a-entity id="portal-habitat" position="0 1.6 -5">
-      <!-- Base del portal con efectos -->
-      <a-cylinder src="#stone" height="0.3" radius="2" position="0 0 0" 
-                  shadow="receive: true" roughness="0.8"></a-cylinder>
-      
-      <!-- Columnas del portal -->
-      <a-cylinder src="#metal" height="3" radius="0.15" position="-1.5 1.5 0" 
-                  metalness="0.9" roughness="0.2" 
-                  animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear"></a-cylinder>
-      <a-cylinder src="#metal" height="3" radius="0.15" position="1.5 1.5 0" 
-                  metalness="0.9" roughness="0.2"
-                  animation="property: rotation; to: 0 -360 0; loop: true; dur: 20000; easing: linear"></a-cylinder>
-      
-      <!-- Portal holográfico central -->
-      <a-ring color="#00d4ff" radius-inner="0.8" radius-outer="1.2" position="0 1.6 0"
-              opacity="0.7" metalness="1" roughness="0"
-              animation="property: rotation; to: 0 0 360; loop: true; dur: 4000; easing: linear"
-              animation__scale="property: scale; to: 1.2 1.2 1.2; dir: alternate; loop: true; dur: 2000; easing: easeInOutQuad"
-              class="clickable"></a-ring>
-      
-      <!-- Partículas mágicas -->
-      <a-entity particle-system="preset: default; color: #00d4ff, #ffffff; particleCount: 100; maxAge: 3; texture: https://cdn.aframe.io/examples/ui/images/gradient.png; blending: 1; size: 1"
-                position="0 1.6 0"></a-entity>
-      
-      <!-- Texto flotante con animación -->
-      <a-entity position="0 3 0" 
-                animation="property: position; to: 0 3.3 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutQuad">
-        <a-plane color="#1a1a1a" width="3" height="1.2" opacity="0.8" roughness="0.3"></a-plane>
-        <a-text value="HABITAT PINGUINOS\n\n>>> CLICK AQUI <<<" 
-                align="center" color="#00ffff" width="2.8"
-                position="0 0 0.05" letter-spacing="1"
-                animation="property: components.text.color; to: #ffffff; dir: alternate; loop: true; dur: 1000"></a-text>
-      </a-entity>
-
-      <!-- Área clickable invisible mejorada -->
-      <a-cylinder opacity="0" height="4" radius="1.5" class="clickable"></a-cylinder>
-    </a-entity>
-
-    <!-- CAMINO DE PIEDRAS -->
-    <a-entity id="stone-path">
-      <a-box src="#stone" width="3" height="0.1" depth="2" position="0 0.05 -2" roughness="0.9"></a-box>
-      <a-box src="#stone" width="3" height="0.1" depth="2" position="0 0.05 -4" roughness="0.9"></a-box>
-      <a-box src="#stone" width="3" height="0.1" depth="2" position="0 0.05 -6" roughness="0.9"></a-box>
-      <a-box src="#stone" width="3" height="0.1" depth="2" position="0 0.05 -8" roughness="0.9"></a-box>
-    </a-entity>
-
-    <!-- PANEL DE INFORMACIÓN INTERACTIVO -->
-    <a-entity id="info-kiosk" position="-5 0 -4" rotation="0 30 0">
-      <!-- Estructura del kiosko -->
-      <a-box src="#wood" width="0.2" height="3" depth="0.2" position="0 1.5 0" shadow="cast: true"></a-box>
-      <a-box src="#wood" width="2.5" height="0.3" depth="2" position="0 3.2 0" shadow="cast: true"></a-box>
-      
-      <!-- Panel digital -->
-      <a-plane src="#metal" width="2.2" height="2.5" position="0 1.8 0.15" 
-               roughness="0.1" metalness="0.9" shadow="cast: true">
-        <a-plane color="#0a0a0a" width="2" height="2.3" position="0 0 0.05" opacity="0.95"></a-plane>
-        <a-text id="infoPanel"
-                value="╔════════════════╗\n   INFORMACIÓN ZOO\n╚════════════════╝\n\n📅 Horario:\n   9:00 - 18:00\n\n👥 Visitantes HOY:\n   1.247\n\n🌡️ Temperatura:\n   22°C\n\n🐧 Especies: 45\n\n💡 Click en el portal\n   para continuar" 
-                align="left" color="#00ff00" width="1.8"
-                position="-0.85 0.8 0.1"
-                wrap-count="25"
-                letter-spacing="0"
-                line-height="50"
-                font="monoid"></a-text>
+    <!-- Letrero de bienvenida mejorado con marco -->
+    <a-entity position="0 2.8 -6">
+      <!-- Marco dorado -->
+      <a-box color="#DAA520" width="5.3" height="1.8" depth="0.1" position="0 0 -0.05"></a-box>
+      <!-- Fondo de madera -->
+      <a-plane 
+        color="#6B4423" 
+        width="5" 
+        height="1.5">
       </a-plane>
+      <!-- Texto principal -->
+      <a-text 
+        value="BIENVENIDOS AL ZOO VIRTUAL" 
+        align="center" 
+        color="#FFD700" 
+        width="4.8"
+        position="0 0.3 0.1"
+        font="roboto">
+      </a-text>
+      <!-- Subtítulo -->
+      <a-text 
+        value="Equipo 4: Maria, Jose Angel, Paloma" 
+        align="center" 
+        color="#F0E68C" 
+        width="4.5"
+        position="0 -0.2 0.1">
+      </a-text>
     </a-entity>
 
-    <!-- VEGETACIÓN REALISTA -->
-    <!-- Árboles principales -->
-    <a-entity id="tree1" position="7 0 -8">
-      <a-cylinder src="#wood" height="5" radius="0.4" position="0 2.5 0" shadow="cast: true" roughness="0.9"></a-cylinder>
-      <a-cone color="#2d5016" radius-bottom="2.5" height="4" position="0 6 0" shadow="cast: true" roughness="0.8"></a-cone>
-      <a-cone color="#3a6b1f" radius-bottom="2" height="3" position="0 7.5 0" roughness="0.8"></a-cone>
-      <a-cone color="#4a7f28" radius-bottom="1.5" height="2" position="0 8.5 0" roughness="0.8"></a-cone>
+    <!-- Panel de información mejorado -->
+    <a-entity position="-3 1.5 -3" rotation="0 30 0">
+      <!-- Marco del panel -->
+      <a-box color="#1A252F" width="2.1" height="1.9" depth="0.05" position="0 0 -0.05"></a-box>
+      <!-- Panel principal -->
+      <a-plane color="#2C3E50" width="2" height="1.8" opacity="0.95"></a-plane>
+      <!-- Texto del panel -->
+      <a-text 
+        id="infoPanel"
+        value="INFORMACION\n\nHorario: 9:00-18:00\nVisitantes: 1.247\nTemperatura: 22°C\n\nClick portal azul\npara continuar" 
+        align="center" 
+        color="#ECF0F1" 
+        width="1.8"
+        position="0 0 0.1"
+        wrap-count="20">
+      </a-text>
     </a-entity>
 
-    <a-entity id="tree2" position="-7 0 -8">
-      <a-cylinder src="#wood" height="4.5" radius="0.35" position="0 2.25 0" shadow="cast: true" roughness="0.9"></a-cylinder>
-      <a-cone color="#2d5016" radius-bottom="2.2" height="3.5" position="0 5.5 0" shadow="cast: true" roughness="0.8"></a-cone>
-      <a-cone color="#3a6b1f" radius-bottom="1.8" height="2.8" position="0 6.8 0" roughness="0.8"></a-cone>
-      <a-cone color="#4a7f28" radius-bottom="1.3" height="1.8" position="0 7.8 0" roughness="0.8"></a-cone>
-    </a-entity>
-
-    <a-entity id="tree3" position="6 0 -2" rotation="0 45 0">
-      <a-cylinder src="#wood" height="4" radius="0.3" position="0 2 0" shadow="cast: true" roughness="0.9"></a-cylinder>
-      <a-cone color="#2d5016" radius-bottom="2" height="3.2" position="0 5 0" shadow="cast: true" roughness="0.8"></a-cone>
-      <a-cone color="#3a6b1f" radius-bottom="1.6" height="2.5" position="0 6.2 0" roughness="0.8"></a-cone>
-    </a-entity>
-
-    <a-entity id="tree4" position="-6 0 -2" rotation="0 -45 0">
-      <a-cylinder src="#wood" height="3.8" radius="0.3" position="0 1.9 0" shadow="cast: true" roughness="0.9"></a-cylinder>
-      <a-cone color="#2d5016" radius-bottom="1.9" height="3" position="0 4.8 0" shadow="cast: true" roughness="0.8"></a-cone>
-      <a-cone color="#3a6b1f" radius-bottom="1.5" height="2.3" position="0 5.9 0" roughness="0.8"></a-cone>
-    </a-entity>
+    <!-- Árboles 3D distribuidos por la escena -->
+    <a-gltf-model src="#treeModel" position="5 0 -5" scale="1.5 1.5 1.5" rotation="0 45 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="-5 0 -5" scale="1.2 1.2 1.2" rotation="0 -30 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="7 0 -8" scale="1.8 1.8 1.8" rotation="0 120 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="-7 0 -7" scale="1.6 1.6 1.6" rotation="0 -80 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="3 0 -10" scale="1.3 1.3 1.3" rotation="0 200 0"></a-gltf-model>
+    <a-gltf-model src="#treeModel" position="-4 0 -9" scale="1.4 1.4 1.4" rotation="0 90 0"></a-gltf-model>
 
     <!-- Arbustos decorativos -->
-    <a-sphere color="#4a7f28" radius="0.8" position="4 0.4 -3" shadow="cast: true" roughness="0.9"></a-sphere>
-    <a-sphere color="#3a6b1f" radius="0.6" position="4.8 0.3 -3.5" shadow="cast: true" roughness="0.9"></a-sphere>
-    <a-sphere color="#4a7f28" radius="0.7" position="-4.5 0.35 -3.5" shadow="cast: true" roughness="0.9"></a-sphere>
-    <a-sphere color="#3a6b1f" radius="0.5" position="-5.2 0.25 -3" shadow="cast: true" roughness="0.9"></a-sphere>
+    <a-sphere color="#2E8B57" radius="0.6" position="2 0.3 -2.5" segments-height="8" segments-width="8"></a-sphere>
+    <a-sphere color="#3CB371" radius="0.5" position="-2.5 0.25 -2" segments-height="8" segments-width="8"></a-sphere>
+    <a-sphere color="#2E8B57" radius="0.7" position="4 0.35 -3" segments-height="8" segments-width="8"></a-sphere>
 
-    <!-- ROCAS NATURALES -->
-    <a-entity id="rocks">
-      <a-dodecahedron src="#stone" radius="0.6" position="5 0.3 -5" rotation="20 45 10" 
-                      shadow="cast: true; receive: true" roughness="0.95"></a-dodecahedron>
-      <a-dodecahedron src="#stone" radius="0.4" position="5.8 0.2 -4.5" rotation="-15 70 25" 
-                      shadow="cast: true; receive: true" roughness="0.95"></a-dodecahedron>
-      <a-dodecahedron src="#stone" radius="0.5" position="-5.5 0.25 -5.5" rotation="35 -20 -15" 
-                      shadow="cast: true; receive: true" roughness="0.95"></a-dodecahedron>
-      <a-dodecahedron src="#stone" radius="0.35" position="-6 0.18 -5" rotation="-25 40 5" 
-                      shadow="cast: true; receive: true" roughness="0.95"></a-dodecahedron>
+    <!-- Rocas decorativas mejoradas -->
+    <a-entity position="3 0 -3">
+      <a-sphere color="#808080" radius="0.5" position="0 0.25 0"></a-sphere>
+      <a-sphere color="#696969" radius="0.35" position="0.4 0.15 0.3"></a-sphere>
+      <a-sphere color="#778899" radius="0.3" position="-0.3 0.15 0.2"></a-sphere>
+    </a-entity>
+    
+    <a-entity position="-4 0 -4">
+      <a-sphere color="#696969" radius="0.4" position="0 0.2 0"></a-sphere>
+      <a-sphere color="#808080" radius="0.3" position="0.3 0.15 -0.2"></a-sphere>
     </a-entity>
 
-    <!-- FUENTE DECORATIVA -->
-    <a-entity id="fountain" position="-8 0 -8">
-      <a-cylinder src="#stone" height="0.8" radius="2" position="0 0.4 0" shadow="receive: true" roughness="0.8"></a-cylinder>
-      <a-cylinder src="#water" height="0.3" radius="1.8" position="0 0.95 0" opacity="0.7" 
-                  metalness="0.5" roughness="0.1"
-                  animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear"></a-cylinder>
-      <a-cylinder color="#4db8ff" height="1" radius="0.1" position="0 1.5 0" opacity="0.8"
-                  animation="property: scale; to: 1 1.5 1; dir: alternate; loop: true; dur: 1500"></a-cylinder>
-      <a-entity particle-system="preset: default; color: #4db8ff, #ffffff; particleCount: 50; maxAge: 2"
-                position="0 2 0"></a-entity>
+    <!-- Flores decorativas -->
+    <a-entity position="1.5 0.1 -1.5">
+      <a-cone color="#FF69B4" radius-bottom="0.1" height="0.15" position="0 0 0"></a-cone>
+      <a-cone color="#FF1493" radius-bottom="0.1" height="0.15" position="0.2 0 0.1"></a-cone>
+      <a-cone color="#FFB6C1" radius-bottom="0.1" height="0.15" position="-0.15 0 0.15"></a-cone>
     </a-entity>
 
-    <!-- VALLAS DECORATIVAS -->
-    <a-entity id="fence-left" position="-10 0 -5" rotation="0 0 0">
-      <a-box src="#wood" width="0.2" height="1.5" depth="0.2" position="0 0.75 0" shadow="cast: true"></a-box>
-      <a-box src="#wood" width="0.2" height="1.5" depth="0.2" position="0 0.75 1" shadow="cast: true"></a-box>
-      <a-box src="#wood" width="0.2" height="1.5" depth="0.2" position="0 0.75 2" shadow="cast: true"></a-box>
-      <a-box src="#wood" width="0.1" height="0.1" depth="2.5" position="0 1.3 1" shadow="cast: true"></a-box>
-      <a-box src="#wood" width="0.1" height="0.1" depth="2.5" position="0 0.7 1" shadow="cast: true"></a-box>
+    <a-entity position="-2 0.1 -1.8">
+      <a-cone color="#FFD700" radius-bottom="0.1" height="0.15" position="0 0 0"></a-cone>
+      <a-cone color="#FFA500" radius-bottom="0.1" height="0.15" position="0.15 0 -0.1"></a-cone>
+      <a-cone color="#FFFF00" radius-bottom="0.1" height="0.15" position="-0.1 0 0.1"></a-cone>
     </a-entity>
 
-    <a-entity id="fence-right" position="10 0 -5" rotation="0 0 0">
-      <a-box src="#wood" width="0.2" height="1.5" depth="0.2" position="0 0.75 0" shadow="cast: true"></a-box>
-      <a-box src="#wood" width="0.2" height="1.5" depth="0.2" position="0 0.75 1" shadow="cast: true"></a-box>
-      <a-box src="#wood" width="0.2" height="1.5" depth="0.2" position="0 0.75 2" shadow="cast: true"></a-box>
-      <a-box src="#wood" width="0.1" height="0.1" depth="2.5" position="0 1.3 1" shadow="cast: true"></a-box>
-      <a-box src="#wood" width="0.1" height="0.1" depth="2.5" position="0 0.7 1" shadow="cast: true"></a-box>
+    <!-- Camino de piedras -->
+    <a-entity id="path">
+      <a-box color="#8B7355" width="1.5" height="0.05" depth="0.8" position="0 0.02 -1" rotation="0 5 0"></a-box>
+      <a-box color="#A0826D" width="1.5" height="0.05" depth="0.8" position="0 0.02 -2" rotation="0 -3 0"></a-box>
+      <a-box color="#8B7355" width="1.5" height="0.05" depth="0.8" position="0 0.02 -3" rotation="0 2 0"></a-box>
     </a-entity>
 
-    <!-- PÁJAROS ANIMADOS -->
-    <a-entity id="bird1" position="-3 8 -10"
-              animation="property: position; to: 3 9 -15; dur: 8000; loop: true; dir: alternate; easing: easeInOutSine">
-      <a-sphere color="#8B4513" radius="0.15"></a-sphere>
-      <a-triangle color="#654321" scale="0.3 0.1 0.1" position="0.1 0 0.1" rotation="0 45 0"></a-triangle>
-      <a-triangle color="#654321" scale="0.3 0.1 0.1" position="-0.1 0 0.1" rotation="0 -45 0"></a-triangle>
+    <!-- Suelo con textura mejorada -->
+    <a-plane 
+      color="#7CFC00" 
+      rotation="-90 0 0" 
+      width="50" 
+      height="50" 
+      position="0 0 0"
+      roughness="0.8">
+    </a-plane>
+
+    <!-- Valla decorativa -->
+    <a-entity position="8 0 -4">
+      <a-box color="#8B4513" width="0.1" height="1" depth="0.1" position="0 0.5 0"></a-box>
+      <a-box color="#8B4513" width="0.1" height="1" depth="0.1" position="0 0.5 1"></a-box>
+      <a-box color="#8B4513" width="0.1" height="1" depth="0.1" position="0 0.5 2"></a-box>
+      <a-box color="#D2691E" width="0.05" height="0.1" depth="2.2" position="0 0.7 1"></a-box>
+      <a-box color="#D2691E" width="0.05" height="0.1" depth="2.2" position="0 0.4 1"></a-box>
     </a-entity>
 
-    <a-entity id="bird2" position="4 10 -12"
-              animation="property: position; to: -4 11 -8; dur: 10000; loop: true; dir: alternate; easing: easeInOutSine">
-      <a-sphere color="#8B4513" radius="0.15"></a-sphere>
-      <a-triangle color="#654321" scale="0.3 0.1 0.1" position="0.1 0 0.1" rotation="0 45 0"></a-triangle>
-      <a-triangle color="#654321" scale="0.3 0.1 0.1" position="-0.1 0 0.1" rotation="0 -45 0"></a-triangle>
-    </a-entity>
-
-    <!-- SUELO CON TEXTURA -->
-    <a-plane src="#grass" rotation="-90 0 0" width="100" height="100" position="0 0 0" 
-             shadow="receive: true" repeat="20 20" roughness="0.9"></a-plane>
-
-    <!-- CIELO MEJORADO -->
-    <a-sky color="#87CEEB" 
-           animation="property: components.material.color; to: #b0d4f1; dur: 30000; dir: alternate; loop: true"></a-sky>
-
-    <!-- NUBES -->
-    <a-entity id="clouds">
-      <a-sphere color="#ffffff" radius="2" position="-15 20 -30" opacity="0.6"></a-sphere>
-      <a-sphere color="#ffffff" radius="1.5" position="-13 20 -30" opacity="0.6"></a-sphere>
-      <a-sphere color="#ffffff" radius="1.8" position="-14 20.5 -31" opacity="0.6"></a-sphere>
-      
-      <a-sphere color="#ffffff" radius="2.2" position="18 22 -35" opacity="0.6"></a-sphere>
-      <a-sphere color="#ffffff" radius="1.7" position="20 22 -35" opacity="0.6"></a-sphere>
-      <a-sphere color="#ffffff" radius="1.9" position="19 22.5 -36" opacity="0.6"></a-sphere>
-    </a-entity>
-
-    <!-- CÁMARA CON CONTROLES -->
-    <a-entity camera look-controls wasd-controls position="0 1.6 5">
-      <a-cursor color="#00ffff" 
-                raycaster="objects: .clickable"
-                animation__click="property: scale; from: 1 1 1; to: 0.8 0.8 0.8; dur: 200; startEvents: click"
-                animation__clickreset="property: scale; to: 1 1 1; dur: 200; startEvents: animationcomplete__click"
-                fuse="true" fuseTimeout="1500">
+    <!-- Cámara -->
+    <a-entity camera look-controls wasd-controls position="0 1.6 0">
+      <a-cursor
+        color="#4A90E2"
+        raycaster="objects: .clickable"
+        fuse="true"
+        fuse-timeout="1500">
       </a-cursor>
     </a-entity>
   </a-scene>
 
+  <!-- Scripts -->
   <script>
-    console.log('✓ Zoo Virtual Físico cargado');
->>>>>>> 715983469cf8ef19d296954d8a2f6cc6d7ab5f41:index2.html
+    console.log('✓ Script index cargado');
     
-    <!-- Iluminación -->
-    <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
-    <a-light type="directional" color="#ffffff" intensity="0.6" position="10 15 5"></a-light>
-    <a-light type="point" color="#ffd700" intensity="0.4" position="0 4 -6"></a-light>
+    const scene = document.querySelector('a-scene');
+    
+    scene.addEventListener('loaded', function() {
+      console.log('✓ Escena entrada cargada');
+      
+      // Navegación
+      const clickables = document.querySelectorAll('.clickable');
+      
+      clickables.forEach(function(element) {
+        element.addEventListener('click', function() {
+          console.log('→ Navegando a habitat');
+          window.location.href = 'escena-habitat.html';
+        });
+      });
+      
+      // Efecto hover
+      const portal = document.querySelector('#portal');
+      
+      portal.addEventListener('mouseenter', function() {
+        portal.setAttribute('scale', '1.15 1.15 1.15');
+        portal.setAttribute('color', '#5BA3FF');
+        portal.setAttribute('opacity', '0.8');
+      });
+      
+      portal.addEventListener('mouseleave', function() {
+        portal.setAttribute('scale', '1 1 1');
+        portal.setAttribute('color', '#4A90E2');
+        portal.setAttribute('opacity', '0.6');
+      });
 
-<<<<<<< HEAD:zoo/zoo-virtual/index2.html
-    <!-- ENTRADA MONUMENTAL -->
-    <a-entity id="gate" position="0 0 -12">
-      <a-box color="#5a4a3a" width="1.5" height="6" depth="1.5" position="-4 3 0" material="roughness: 0.9"></a-box>
-      <a-box color="#5a4a3a" width="1.5" height="6" depth="1.5" position="4 3 0" material="roughness: 0.9"></a-box>
-      <a-box color="#8B7355" width="2" height="0.4" depth="2" position="-4 6.2 0"></a-box>
-      <a-box color="#8B7355" width="2" height="0.4" depth="2" position="4 6.2 0"></a-box>
-      <a-box color="#8B4513" width="9" height="0.8" depth="1.2" position="0 6 0" material="roughness: 0.7"></a-box>
-      <a-entity position="0 6 0.8">
-        <a-plane color="#2C1810" width="7" height="1.5" material="roughness: 0.8"></a-plane>
-        <a-text value="ZOO VIRTUAL\nEQUIPO 4" align="center" color="#FFD700" width="6.5" position="0 0 0.05" letter-spacing="3"></a-text>
-      </a-entity>
-      <a-entity position="-4 6.8 0">
-        <a-cylinder color="#8B7355" height="0.5" radius="0.15"></a-cylinder>
-        <a-sphere color="#ff6600" radius="0.3" position="0 0.4 0" animation="property: components.material.color; to: #ff9933; dir: alternate; loop: true; dur: 1000"></a-sphere>
-      </a-entity>
-      <a-entity position="4 6.8 0">
-        <a-cylinder color="#8B7355" height="0.5" radius="0.15"></a-cylinder>
-        <a-sphere color="#ff6600" radius="0.3" position="0 0.4 0" animation="property: components.material.color; to:
-=======
-      // Actualizar panel de información cada 10 segundos
-      function updateInfoPanel() {
+      // Actualizar info panel cada 10 segundos
+      function updateInfo() {
         const panel = document.querySelector('#infoPanel');
         const visitors = 1200 + Math.floor(Math.random() * 100);
         const temp = 20 + Math.floor(Math.random() * 5);
-        const hour = new Date().getHours();
-        const minute = new Date().getMinutes();
         
         panel.setAttribute('value',
-          `╔════════════════╗\n` +
-          `   INFORMACIÓN ZOO\n` +
-          `╚════════════════╝\n\n` +
-          `📅 Horario:\n` +
-          `   9:00 - 18:00\n\n` +
-          `👥 Visitantes HOY:\n` +
-          `   ${visitors}\n\n` +
-          `🌡️ Temperatura:\n` +
-          `   ${temp}°C\n\n` +
-          `🐧 Especies: 45\n\n` +
-          `🕐 Hora actual:\n` +
-          `   ${hour}:${minute.toString().padStart(2, '0')}\n\n` +
-          `💡 Click en el portal\n` +
-          `   para continuar`
+          `INFORMACION\n\n` +
+          `Horario: 9:00-18:00\n` +
+          `Visitantes: ${visitors}\n` +
+          `Temperatura: ${temp}°C\n\n` +
+          `Click portal azul\npara continuar`
         );
       }
       
-      setInterval(updateInfoPanel, 10000);
-      updateInfoPanel(); // Actualizar inmediatamente
+      setInterval(updateInfo, 10000);
       
-      console.log('✓ Todos los sistemas iniciados');
-      console.log('💡 Usa WASD para moverte, ratón para mirar');
-      console.log('🎯 Click en el portal azul para ir al hábitat');
+      console.log('✓ TODO configurado');
     });
   </script>
 
- 
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
 </body>
 </html>
->>>>>>> 715983469cf8ef19d296954d8a2f6cc6d7ab5f41:index2.html
