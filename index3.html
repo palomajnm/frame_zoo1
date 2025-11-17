@@ -15,10 +15,10 @@
 <body>
     <a-scene>
     <a-assets>
-        <img id="sky360"
-        src="./assets/360/zoo-entrance.jpg">
+        <img id="sky360" src="./assets/360/zoo-entrance.jpg">
         <a-asset-item id="treeModel"
         src="./assets/models/low_poly_tree_pack.glb"></a-asset-item>
+        <img id="texturaSuelo" src="ruta/a/tu-textura.jpg">
     </a-assets>
     <a-sky src="#sky360"></a-sky>
 
@@ -99,8 +99,8 @@
     <a-sphere color="#696969" radius="0.4" position="-4 0.2 -4"></a-sphere>
 
     <a-plane 
-        color="#228B22"
-        rotation="-90 0 0" 
+        src="#texturaSuelo"
+        rotation="-90 0 0"
         width="50" 
         height="50" 
         position="0 0 0">
