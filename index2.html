@@ -9,12 +9,12 @@
 <body>
   <a-scene>
     <a-assets>
-      <img id="sky360" src="./assets/360/zoo-entrance.jpg">
-      <a-asset-item id="treeModel" src="./assets/models/low_poly_tree_pack.glb"></a-asset-item>
+      <img id="sky360" src="./assets/360/zoo-entrance.jpg" crossorigin="anonymous">
+      <a-asset-item id="treeModel" src="./assets/low_poly_tree_pack.glb" crossorigin="anonymous"></a-asset-item>
     </a-assets>
 
     <!-- Cielo -->
-    <a-sky src="#sky360"></a-sky>
+    <a-sky color="#87CEEB" material="shader: flat"></a-sky>
 
     <!-- Iluminación mejorada -->
     <a-light type="ambient" color="#E8F4F8" intensity="0.9"></a-light>
@@ -212,11 +212,36 @@
     
     const scene = document.querySelector('a-scene');
     
+    // Manejo de errores de carga
     scene.addEventListener('loaded', function() {
-      console.log('✓ Escena entrada cargada');
+      console.log('✓ Escena entrada cargada correctamente');
+    });
+
+    // Detectar errores en assets
+    const assets = document.querySelector('a-assets');
+    if (assets) {
+      assets.addEventListener('loaded', function() {
+        console.log('✓ Todos los assets cargados');
+      });
+      
+      assets.addEventListener('timeout', function() {
+        console.warn('⚠ Timeout en la carga de assets');
+      });
+    }
+
+    // Esperar a que la escena esté lista
+    if (scene.hasLoaded) {
+      initScene();
+    } else {
+      scene.addEventListener('loaded', initScene);
+    }
+
+    function initScene() {
+      console.log('✓ Inicializando escena...');
       
       // Navegación
       const clickables = document.querySelectorAll('.clickable');
+      console.log('✓ Encontrados ' + clickables.length + ' elementos clicables');
       
       clickables.forEach(function(element) {
         element.addEventListener('click', function() {
@@ -225,39 +250,48 @@
         });
       });
       
-      // Efecto hover
+      // Efecto hover en el portal
       const portal = document.querySelector('#portal');
       
-      portal.addEventListener('mouseenter', function() {
-        portal.setAttribute('scale', '1.15 1.15 1.15');
-        portal.setAttribute('color', '#5BA3FF');
-        portal.setAttribute('opacity', '0.8');
-      });
-      
-      portal.addEventListener('mouseleave', function() {
-        portal.setAttribute('scale', '1 1 1');
-        portal.setAttribute('color', '#4A90E2');
-        portal.setAttribute('opacity', '0.6');
-      });
+      if (portal) {
+        portal.addEventListener('mouseenter', function() {
+          portal.setAttribute('scale', '1.15 1.15 1.15');
+          portal.setAttribute('color', '#5BA3FF');
+          portal.setAttribute('opacity', '0.8');
+        });
+        
+        portal.addEventListener('mouseleave', function() {
+          portal.setAttribute('scale', '1 1 1');
+          portal.setAttribute('color', '#4A90E2');
+          portal.setAttribute('opacity', '0.6');
+        });
+      }
 
       // Actualizar info panel cada 10 segundos
       function updateInfo() {
         const panel = document.querySelector('#infoPanel');
-        const visitors = 1200 + Math.floor(Math.random() * 100);
-        const temp = 20 + Math.floor(Math.random() * 5);
-        
-        panel.setAttribute('value',
-          `INFORMACION\n\n` +
-          `Horario: 9:00-18:00\n` +
-          `Visitantes: ${visitors}\n` +
-          `Temperatura: ${temp}°C\n\n` +
-          `Click portal azul\npara continuar`
-        );
+        if (panel) {
+          const visitors = 1200 + Math.floor(Math.random() * 100);
+          const temp = 20 + Math.floor(Math.random() * 5);
+          
+          panel.setAttribute('value',
+            'INFORMACION\n\n' +
+            'Horario: 9:00-18:00\n' +
+            'Visitantes: ' + visitors + '\n' +
+            'Temperatura: ' + temp + '°C\n\n' +
+            'Click portal azul\npara continuar'
+          );
+        }
       }
       
       setInterval(updateInfo, 10000);
       
-      console.log('✓ TODO configurado');
+      console.log('✓ TODO configurado correctamente');
+    }
+
+    // Manejo de errores globales
+    window.addEventListener('error', function(e) {
+      console.error('❌ Error detectado:', e.message);
     });
   </script>
 
