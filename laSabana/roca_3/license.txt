@@ -1,0 +1,11 @@
+Model Information:
+* title:	Roca 3
+* source:	https://sketchfab.com/3d-models/roca-3-e84b7817c4dd49358a1e193a9536d8c6
+* author:	fedexrfoto (https://sketchfab.com/fedexrfoto)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Roca 3" (https://sketchfab.com/3d-models/roca-3-e84b7817c4dd49358a1e193a9536d8c6) by fedexrfoto (https://sketchfab.com/fedexrfoto) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

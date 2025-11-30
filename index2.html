@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sala 3D con Mapa Interactivo</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    
+    <style>
+        @font-face {
+    font-family: 'WildTrails';
+    src: url('./WildTrails.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+        body { margin: 0; overflow: hidden; 
+        font-family: 'WildTrails', sans-serif;
+        } 
+
+    </style>
+</head>
+<body>
+    <a-scene>
+        
+        <a-assets>
+            <img id="mundoAnimalImg" src="./mundoanimal.jpg" alt="Imagen del mundo animal">
+        </a-assets>
+
+        <a-sky color="#87CEEB"></a-sky> 
+        
+        <a-plane position="0 0 -4" 
+                 rotation="-90 0 0" 
+                 width="10" height="10" 
+                 color="#A9A9A9" 
+                 shadow>
+        </a-plane>
+        
+        <a-plane id="mapa-pared"
+                 position="0 2.5 -9" 
+                 width="10" height="5" 
+                 src="#mundoAnimalImg" 
+                 shadow>
+        </a-plane>
+        
+        <a-text value="BIENVENIDOS AL ZOO VIRTUAL"
+                align="center"
+                font="mozillavr"
+                color="black" 
+                width="6" 
+                position="0 4.5 -8.9" 
+                shadow>
+        </a-text>
+        
+        <a-entity>
+            
+            <a-sphere id="punto-sabana"
+                      radius="0.2" 
+                      position="0.5 2 -8" 
+                      color="#FF4500" 
+                      shadow
+                      link="href: ./laSabana/sabana.html">
+            </a-sphere>
+            
+            <a-text value="LA SABANA"
+                    align="center"
+                    width="2"
+                    color="#000000"
+                    position="0 3.8 -8.8"
+                    rotation="0 0 0">
+            </a-text>
+
+        </a-entity>
+
+        <a-plane position="-5 2.5 -4" 
+                 rotation="0 90 0" 
+                 width="10" height="5" 
+                 color="#FFF8DC" 
+                 shadow>
+        </a-plane>
+        
+        <a-plane position="5 2.5 -4" 
+                 rotation="0 -90 0" 
+                 width="10" height="5" 
+                 color="#FFF8DC" 
+                 shadow>
+        </a-plane>
+        
+        <a-entity camera 
+                  look-controls 
+                  keyboard-controls="movementEnabled: true" 
+                  movement-controls="speed: 0.2; controls: [keyboard, touch]"
+                  position="0 1.6 0">
+            
+            <a-entity cursor="fuse: false"
+                      position="0 0 -1"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      material="color: #00FF00; opacity: 0.8; side: double">
+            </a-entity>
+        </a-entity>
+        
+        <a-entity light="type: ambient; color: #BBB"></a-entity>
+        <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-1 1 1"></a-entity>
+
+    </a-scene>
+</body>
+</html>

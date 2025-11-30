@@ -1,0 +1,11 @@
+Model Information:
+* title:	New Qlone
+* source:	https://sketchfab.com/3d-models/new-qlone-42cbb62f460f4d82a7d67c29fe0f8967
+* author:	Paolosalanitri (https://sketchfab.com/Paolosalanitri)
+
+Model License:
+* license type:	CC-BY-ND-4.0 (http://creativecommons.org/licenses/by-nd/4.0/)
+* requirements:	Author must be credited. Modified versions can not be distributed. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "New Qlone" (https://sketchfab.com/3d-models/new-qlone-42cbb62f460f4d82a7d67c29fe0f8967) by Paolosalanitri (https://sketchfab.com/Paolosalanitri) licensed under CC-BY-ND-4.0 (http://creativecommons.org/licenses/by-nd/4.0/)

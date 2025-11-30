@@ -1,0 +1,11 @@
+Model Information:
+* title:	Lion
+* source:	https://sketchfab.com/3d-models/lion-61d687ca92dc4cafbd5e74e3be40d49d
+* author:	kenchoo (https://sketchfab.com/kenchoo)
+
+Model License:
+* license type:	CC-BY-NC-SA-4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/)
+* requirements:	Author must be credited. No commercial use. Modified versions must have the same license.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Lion" (https://sketchfab.com/3d-models/lion-61d687ca92dc4cafbd5e74e3be40d49d) by kenchoo (https://sketchfab.com/kenchoo) licensed under CC-BY-NC-SA-4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/)
