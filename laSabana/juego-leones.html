@@ -1,268 +1,237 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8">
+    <title>Juego VR - Safari de Precisión</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <style>
+      /* Estilos básicos */
+      html, body { height: 100%; }
+      body { margin: 0; overflow: hidden; background-color: #000; }
+      a-scene { position: absolute; inset: 0; }
+      /* Estilos para el botón de regreso */
+      #back-button {
+          position: fixed;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 1000;
+          padding: 10px 20px;
+          font-size: 1.2em;
+          background-color: #f44336;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          display: none; /* Inicialmente oculto */
+      }
+    </style>
 
-<head>
-  <meta charset="utf-8">
-  <title>Juego Avanzado VR: Clasificación de Dieta - V2</title>
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <style>
-    /* Estilos básicos para la página fuera de VR */
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
+    <script>
+      AFRAME.registerComponent('target-animal', {
+        schema: {
+          points: {type: 'int', default: 1} // Puntos por escanear este objetivo
+        },
+        init: function () {
+          var el = this.el;
+          el.setAttribute('class', 'clickable');
+          this.gameLogic = document.querySelector('[game-logic]').components['game-logic'];
+          
 
-    body {
-      background-color: #333;
-    }
+          // Ocultar al iniciar y esperar a que el game-logic lo muestre
+          el.setAttribute('visible', 'false');
 
-    /* La UI principal ahora está dentro de la escena, pero mantenemos el mensaje final */
-    #game-message {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(0, 0, 0, 0.9);
-      color: white;
-      padding: 30px;
-      border-radius: 15px;
-      font-size: 2.5em;
-      text-align: center;
-      z-index: 1000;
-      display: none;
-    }
-  </style>
-</head>
+          // Usar un bounding box invisible para el raycasting preciso
+          var boundingBox = document.createElement('a-box');
+          boundingBox.setAttribute('width', '1');
+          boundingBox.setAttribute('height', '1');
+          boundingBox.setAttribute('depth', '1');
+          boundingBox.setAttribute('material', 'visible: false');
+          el.appendChild(boundingBox);
+          
+          // Evento de "Disparo" (Fusión del Cursor o Click)
+          boundingBox.addEventListener('click', this.hitHandler.bind(this));
+        },
 
-<body>
+        hitHandler: function () {
+          if (!this.el.getAttribute('visible') || this.gameLogic.gameOver) {
+            return;
+          }
+          
+          // 1. Notificar al Game Logic
+          this.gameLogic.animalHit(this.data.points);
 
-  <div id="game-message">
-    ¡JUEGO TERMINADO! 🎉
-    <p>Puntuación Final: <span id="final-score">0</span></p>
-    <button onclick="window.location.reload()"
-      style="padding: 10px 20px; font-size: 1em; background-color: #00bcd4; color: white; border: none; border-radius: 5px; cursor: pointer;">Jugar
-      de Nuevo</button>
-    <button onclick="window.location.href='../'"
-      style="padding: 10px 20px; font-size: 1em; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Volver
-      al Zoo</button>
-  </div>
+          // 2. Ocultar inmediatamente
+          this.el.setAttribute('visible', 'false');
+          
+          // 3. Efecto de Escaneo/Partículas
+          var particleEntity = document.createElement('a-entity');
+          particleEntity.setAttribute('particle-system', {
+            preset: 'explosion', 
+            color: '#00FF00,#00AA00', // Color verde para éxito
+            duration: 500, 
+            maxAge: 0.5, 
+            size: 0.2
+          });
+          particleEntity.setAttribute('position', this.el.getAttribute('position'));
+          this.el.sceneEl.appendChild(particleEntity);
 
-  <a-scene renderer="alpha: true">
-    <a-assets>
-      <a-asset-item id="lion-senior-model" src="./lionsenior/scene.gltf"></a-asset-item>
-      <a-entity id="btn-herbivoro" class="option-button" data-dieta="herbivoro" position="-0.8 -0.1 0.01"
-        animation__scalein="property: scale; to: 1.1 1.1 1.1; startEvents: mouseenter; dur: 200"
-        animation__scaleout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200">
-        <a-plane color="#27ae60" width="1.5" height="0.8"></a-plane>
-        <a-text value="HERBÍVORO" align="center" position="0 0 0.02" width="3" color="#ffffff"
-          font="mozillavr"></a-text>
-      </a-entity>
-
-      <a-entity id="btn-carnivoro" class="option-button" data-dieta="carnivoro" position="0.8 -0.1 0.01"
-        animation__scalein="property: scale; to: 1.1 1.1 1.1; startEvents: mouseenter; dur: 200" <a-entity
-        id="animal-container" position="0 0 -5" rotation="0 0 0"
-        animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear;">
-      </a-entity>
-
-      <a-plane position="0 0 -4" rotation="-90 0 0" width="100" height="100" color="#558B2F" shadow></a-plane>
-      <a-sky color="#87CEEB"></a-sky>
-      <a-entity light="type: ambient; color: #BBB; intensity: 0.5"></a-entity>
-      <a-entity light="type: directional; color: #FFF; intensity: 0.8; castShadow: true" position="-5 10 5"></a-entity>
-
-  </a-scene>
-
-  <script>
-    // ===================================================================
-    // 1. COMPONENTE PERSONALIZADO: Lógica del Juego (quiz-game)
-    // ===================================================================
-
-    AFRAME.registerComponent('quiz-game', {
-      schema: {
-        totalRounds: { type: 'int', default: 5 },
-        timePerRound: { type: 'int', default: 10 }
-      },
-      init: function () {
-        // Estado del juego
-        this.score = 0;
-        this.round = 0;
-        // Agregamos más animales para mayor complejidad
-        this.animals = [
-          { name: "LEÓN", model: "#lion-senior-model", scale: "0.1 0.1 0.1", correctDieta: "carnivoro" },
-          { name: "ELEFANTE ASIÁTICO", model: "#elephant-model", scale: "1 1 1", correctDieta: "herbivoro" },
-          // Puedes añadir más modelos aquí para variar
-        ];
-        this.currentAnimal = null;
-        this.timerInterval = null;
-        this.timeLeft = this.data.timePerRound;
-
-        // Elementos del DOM y A-Frame
-        this.hudScoreEl = document.getElementById('hud-score');
-        this.hudRoundEl = document.getElementById('hud-round');
-        this.hudTimerEl = document.getElementById('hud-timer');
-        this.nameEl = document.getElementById('animal-name');
-        this.containerEl = document.getElementById('animal-container');
-        this.timeBarEl = document.getElementById('time-bar');
-        this.messageEl = document.getElementById('game-message');
-        this.feedbackEl = document.getElementById('feedback-indicator');
-        this.infoPanelEl = document.getElementById('info-panel');
-
-        // Inicializar la UI
-        this.updateHUD();
-
-        // Escuchar clics en los botones de opción (usando delegación para el raycaster)
-        document.querySelectorAll('.option-button').forEach(button => {
-          button.addEventListener('click', this.checkAnswer.bind(this));
-        });
-
-        this.startGame();
-      },
-
-      updateHUD: function () {
-        this.hudScoreEl.setAttribute('value', `Puntuación: ${this.score}`);
-        this.hudRoundEl.setAttribute('value', `Ronda: ${this.round}/${this.data.totalRounds}`);
-        this.hudTimerEl.setAttribute('value', `Tiempo: ${this.timeLeft}s`);
-      },
-
-      startGame: function () {
-        this.nextRound();
-      },
-
-      nextRound: function () {
-        if (this.round >= this.data.totalRounds) {
-          this.endGame();
-          return;
+          // 4. Reposicionar y Mostrar de nuevo (Spawn) después de un pequeño retraso
+          setTimeout(() => {
+            this.gameLogic.spawnTarget(this.el);
+          }, 1000); 
         }
+      });
+    </script>
 
-        this.round++;
+    <script>
+      AFRAME.registerComponent('game-logic', {
+        schema: {
+          initialTime: {type: 'int', default: 60}, // 60 segundos
+          targetsToWin: {type: 'int', default: 5}, // 5 animales escaneados para ganar
+          spawnRadius: {type: 'number', default: 15} // Distancia máxima de aparición
+        },
+        init: function () {
+          this.targetsHit = 0;
+          this.timeLeft = this.data.initialTime;
+          this.gameOver = false;
+          this.targetEntities = document.querySelectorAll('[target-animal]');
+          var sceneEl = this.el;
 
-        // Elegir animal aleatorio
-        const randomIndex = Math.floor(Math.random() * this.animals.length);
-        this.currentAnimal = this.animals[randomIndex];
+          // Crear HUD (Heads-Up Display)
+          this.hudText = document.createElement('a-text');
+          this.hudText.setAttribute('value', 'Tiempo: ' + this.timeLeft + 's | Escaneados: 0 / ' + this.data.targetsToWin);
+          this.hudText.setAttribute('position', '0 3.5 -5');
+          this.hudText.setAttribute('align', 'center');
+          this.hudText.setAttribute('width', '5');
+          this.hudText.setAttribute('color', 'white');
+          this.hudText.setAttribute('font', 'mozillavr');
+          sceneEl.appendChild(this.hudText);
 
-        // 1. Limpiar contenedor anterior y cargar nuevo modelo
-        while (this.containerEl.firstChild) {
-          this.containerEl.removeChild(this.containerEl.firstChild);
-        }
-        const model = document.createElement('a-gltf-model');
-        model.setAttribute('src', this.currentAnimal.model);
-        model.setAttribute('scale', this.currentAnimal.scale);
-        model.setAttribute('shadow', '');
-        this.containerEl.appendChild(model);
+          // Iniciar el temporizador
+          this.timerInterval = setInterval(this.updateTimer.bind(this), 1000);
 
-        // 2. Actualizar panel de información y HUD
-        this.nameEl.setAttribute('value', this.currentAnimal.name);
-        this.updateHUD();
+          // Iniciar Spawning de todos los objetivos
+          this.targetEntities.forEach(target => {
+            this.spawnTarget(target);
+          });
+        },
+        
+        // Función para reposicionar y mostrar el objetivo
+       // ... (cerca de la línea 120-135) ...
 
-        // 3. Reiniciar y comenzar temporizador
-        this.timeLeft = this.data.timePerRound;
-        this.timeBarEl.setAttribute('visible', 'true');
-        this.startTimer();
-      },
+        // Función para reposicionar y mostrar el objetivo
+        spawnTarget: function(targetEl) {
+          if (this.gameOver) return;
+          
+          // Generar coordenadas aleatorias (X y Z)
+          var randomAngle = Math.random() * 2 * Math.PI;
+          var randomDistance = Math.random() * this.data.spawnRadius;
+          
+          var x = Math.cos(randomAngle) * randomDistance;
+          var z = Math.sin(randomAngle) * randomDistance;
+          
+          // ✨ SOLUCIÓN: Acceder a la posición inicial directamente del atributo del elemento.
+          // Usamos 'position' ya que es donde se define la altura Y en el HTML.
+          var initialPos = targetEl.getAttribute('position'); 
+          var y = initialPos ? initialPos.y : 0; // Usar 0 como fallback si falla
 
-      startTimer: function () {
-        if (this.timerInterval) clearInterval(this.timerInterval);
+          targetEl.setAttribute('position', {x: x, y: y, z: z});
+          targetEl.setAttribute('visible', 'true');
+        },
+// ...
 
-        const maxTime = this.data.timePerRound;
-        const initialWidth = 3.3; // Ancho inicial de la barra
+        updateTimer: function () {
+          if (this.gameOver) return;
 
-        this.timerInterval = setInterval(() => {
           this.timeLeft--;
-
-          // Actualizar barra de tiempo visual
-          const newWidth = (this.timeLeft / maxTime) * initialWidth;
-          const newPositionX = -1.65 + (initialWidth - newWidth) / 2; // Asegura que se colapsa hacia el centro
-
-          this.timeBarEl.setAttribute('width', newWidth > 0 ? newWidth : 0.01);
-          this.timeBarEl.setAttribute('position', { x: newPositionX, y: 0.85, z: 0.01 });
-          this.updateHUD();
+          this.updateHud();
 
           if (this.timeLeft <= 0) {
+            this.gameOver = true;
+            this.hudText.setAttribute('value', '¡TIEMPO AGOTADO! Has escaneado ' + this.targetsHit + ' de ' + this.data.targetsToWin + '.');
+            this.hudText.setAttribute('color', 'red');
+            document.getElementById('back-button').style.display = 'block';
             clearInterval(this.timerInterval);
-            this.handleTimeout();
           }
-        }, 1000);
-      },
+        },
 
-      checkAnswer: function (event) {
-        if (this.timeLeft <= 0) return;
+        animalHit: function(points) {
+            this.targetsHit += points;
+            this.updateHud();
 
-        clearInterval(this.timerInterval);
-        const selectedDieta = event.currentTarget.dataset.dieta;
+            if (this.targetsHit >= this.data.targetsToWin) {
+                this.gameOver = true;
+                this.hudText.setAttribute('value', '¡VICTORIA! Todos los animales escaneados. Tiempo restante: ' + this.timeLeft + 's');
+                this.hudText.setAttribute('color', 'lime');
+                document.getElementById('back-button').style.display = 'block';
+                // Ocultar todos los objetivos restantes al ganar
+                this.targetEntities.forEach(target => target.setAttribute('visible', 'false'));
+                clearInterval(this.timerInterval);
+            }
+        },
 
-        if (selectedDieta === this.currentAnimal.correctDieta) {
-          this.updateScore(10, true);
-        } else {
-          this.updateScore(-5, false);
+        updateHud: function() {
+           this.hudText.setAttribute('value', 'Tiempo: ' + this.timeLeft + 's | Escaneados: ' + this.targetsHit + ' / ' + this.data.targetsToWin);
+        },
+
+        remove: function() {
+            clearInterval(this.timerInterval);
         }
+      });
+    </script>
+    <script src="https://unpkg.com/aframe-particle-system-component@1.1.0/dist/aframe-particle-system-component.min.js"></script>
+  </head>
 
-        setTimeout(() => this.nextRound(), 1500);
-      },
+  <body>
+    <div id="instructions" style="
+        position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000;
+        color: white; background-color: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px;
+        font-family: Arial, sans-serif; text-align: center;">
+      ¡Safari de Precisión! **Mira o haz clic** en los animales cuando aparezcan. ¡Escanea **5** antes de que acabe el tiempo!
+    </div>
 
-      handleTimeout: function () {
-        this.updateScore(-5, false); // Puntos negativos por tiempo agotado
-        this.showFeedback('❌ ¡TIEMPO AGOTADO!', '#e74c3c'); // Feedback visual
+    <a-scene renderer="alpha: true" game-logic="initialTime: 60; targetsToWin: 5">
+        
+        <a-entity camera look-controls wasd-controls position="0 1.6 0" 
+            raycaster="objects: .clickable"
+            cursor="rayOrigin: mouse; fuse: true; fuseTimeout: 1000"> 
+            <a-entity cursor 
+                      position="0 0 -1"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      material="color: green; shader: flat">
+            </a-entity>
+        </a-entity>
 
-        setTimeout(() => this.nextRound(), 1500);
-      },
+        <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#4CAF50" shadow></a-plane>
+        <a-sky color="#87CEEB"></a-sky> 
+        <a-entity light="type: ambient; color: #BBB; intensity: 0.5"></a-entity>
+        <a-entity light="type: directional; color: #FFF; intensity: 0.8; castShadow: true" position="-5 10 5"></a-entity>
 
-      showFeedback: function (text, color) {
-        this.feedbackEl.setAttribute('value', text);
-        this.feedbackEl.setAttribute('color', color);
-        this.feedbackEl.setAttribute('visible', 'true');
+        <a-entity target-animal position="-3 0.5 -5" rotation="0 10 0" scale="0.1 0.1 0.1">
+            <a-gltf-model src="./lionsenior/scene.gltf"></a-gltf-model>
+        </a-entity>
 
-        // Animación de desvanecimiento para el feedback
-        this.feedbackEl.setAttribute('animation', {
-          property: 'position',
-          to: '0 4.5 -3',
-          dur: 1500,
-          easing: 'easeOutQuad'
-        });
+        <a-entity target-animal position="5 0 -8" rotation="0 -45 0" scale="1 1 1">
+            <a-gltf-model src="./elefante_asiatico/scene.gltf"></a-gltf-model>
+        </a-entity>
+        
+        <a-entity target-animal position="1 0.5 -2" rotation="0 180 0" scale="1 1 1">
+            <a-gltf-model src="./baby_lion/scene.gltf"></a-gltf-model>
+        </a-entity>
 
-        // Ocultar el feedback después de la animación
-        setTimeout(() => {
-          this.feedbackEl.setAttribute('visible', 'false');
-          this.feedbackEl.setAttribute('position', '0 3.5 -3'); // Resetear posición
-          this.feedbackEl.removeAttribute('animation');
-        }, 1500);
-      },
+        <a-gltf-model 
+            src="./arbol_magico/scene.gltf" 
+            position="0 0 -10" 
+            rotation="0 0 0" 
+            scale="15 15 15" 
+            shadow>
+        </a-gltf-model>
 
-      updateScore: function (points, isCorrect) {
-        this.score += points;
-        this.updateHUD();
+    </a-scene>
 
-        // Feedback visual
-        const color = isCorrect ? '#2ecc71' : '#e74c3c';
-        const text = isCorrect ? '✅ ¡CORRECTO! +10' : '❌ ¡INCORRECTO! -5';
-        this.showFeedback(text, color);
-
-        // Feedback sonoro (si existen los archivos)
-        const soundId = isCorrect ? '#sfx-correct' : '#sfx-wrong';
-        const soundEl = document.querySelector(soundId);
-        if (soundEl && soundEl.components.sound) {
-          soundEl.components.sound.playSound();
-        } else if (soundEl) {
-          // Si no tiene el componente, lo añadimos temporalmente para usarlo
-          soundEl.setAttribute('sound', 'src', soundId);
-          soundEl.components.sound.playSound();
-        }
-      },
-
-      endGame: function () {
-        if (this.timerInterval) clearInterval(this.timerInterval);
-
-        document.getElementById('final-score').textContent = this.score;
-        this.messageEl.style.display = 'block';
-      }
-    });
-
-    // ===================================================================
-    // 2. INICIAR EL JUEGO
-    // ===================================================================
-    document.querySelector('a-scene').setAttribute('quiz-game', '');
-  </script>
-</body>
-
+    <button id="back-button" onclick="window.location.href='./../index.html'">
+      Volver al Zoo
+    </button>
+  </body>
 </html>
