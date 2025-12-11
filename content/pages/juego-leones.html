@@ -2,247 +2,227 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <title>Juego VR - Safari de Precisión</title>
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <style>
-    /* Estilos básicos */
-    html,
-    body {
-      height: 100%;
-    }
+    <meta charset="utf-8">
+    <title>Juego VR: Rescate del Bebé León con Riesgo</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+    
+    <script>
+        // Componente de seguimiento del juego
+        AFRAME.registerComponent('rescue-game-manager', {
+            init: function() {
+                this.requiredRescueItems = 3; // Cuántos objetos buenos hay que recoger
+                this.collectedRescueItems = 0;
+                this.dangerLevel = 0; // Nuevo contador de peligro
+                this.maxDangerLevel = 3; // Nivel máximo de peligro antes de perder
+                
+                this.messageEl = document.getElementById('mensaje-juego');
+                this.dangerEl = document.getElementById('danger-level'); // Nuevo elemento de UI para el peligro
+                this.babyLionEl = document.getElementById('baby-lion-model');
 
-    body {
-      margin: 0;
-      overflow: hidden;
-      background-color: #000;
-    }
+                // Inicializar mensajes
+                this.updateUI();
 
-    a-scene {
-      position: absolute;
-      inset: 0;
-    }
+                // Escuchar eventos
+                this.el.sceneEl.addEventListener('itemCollected', this.itemCollectedHandler.bind(this));
+                this.el.sceneEl.addEventListener('dangerCollected', this.dangerCollectedHandler.bind(this));
+            },
 
-    /* Estilos para el botón de regreso */
-    #back-button {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      padding: 10px 20px;
-      font-size: 1.2em;
-      background-color: #f44336;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      display: none;
-      /* Inicialmente oculto */
-    }
-  </style>
+            updateUI: function() {
+                // Actualizar el objetivo de rescate
+                this.messageEl.setAttribute('text', {
+                    value: `OBJETIVO: Recoge items de curación. (${this.collectedRescueItems}/${this.requiredRescueItems})`,
+                    color: 'white'
+                });
 
-  <script>
-    AFRAME.registerComponent('target-animal', {
-      schema: {
-        points: { type: 'int', default: 1 } // Puntos por escanear este objetivo
-      },
-      init: function () {
-        var el = this.el;
-        el.setAttribute('class', 'clickable');
-        this.gameLogic = document.querySelector('[game-logic]').components['game-logic'];
+                // Actualizar el nivel de peligro
+                this.dangerEl.setAttribute('text', {
+                    value: `PELIGRO: ${this.dangerLevel}/${this.maxDangerLevel}`,
+                    color: this.dangerLevel >= this.maxDangerLevel - 1 ? 'red' : 'yellow' // Cambia a rojo cuando está cerca de perder
+                });
+            },
 
+            itemCollectedHandler: function() {
+                if (this.collectedRescueItems >= this.requiredRescueItems) return; // Ya ganó
 
-        // Ocultar al iniciar y esperar a que el game-logic lo muestre
-        el.setAttribute('visible', 'false');
+                this.collectedRescueItems++;
+                this.updateUI();
 
-        // Usar un bounding box invisible para el raycasting preciso
-        var boundingBox = document.createElement('a-box');
-        boundingBox.setAttribute('width', '1');
-        boundingBox.setAttribute('height', '1');
-        boundingBox.setAttribute('depth', '1');
-        boundingBox.setAttribute('material', 'visible: false');
-        el.appendChild(boundingBox);
+                // Comprobar la condición de victoria
+                if (this.collectedRescueItems >= this.requiredRescueItems) {
+                    this.messageEl.setAttribute('text', {
+                        value: "¡RESCATE EXITOSO! El bebé león está a salvo. ¡Ganaste!",
+                        color: 'gold',
+                        wrapCount: 20
+                    });
+                    this.dangerEl.setAttribute('visible', false);
+                    this.babyLionEl.setAttribute('scale', '1.5 1.5 1.5');
+                }
+            },
 
-        // Evento de "Disparo" (Fusión del Cursor o Click)
-        boundingBox.addEventListener('click', this.hitHandler.bind(this));
-      },
+            dangerCollectedHandler: function() {
+                if (this.collectedRescueItems >= this.requiredRescueItems) return; // Ya ganó
+                
+                this.dangerLevel++;
+                this.updateUI();
 
-      hitHandler: function () {
-        if (!this.el.getAttribute('visible') || this.gameLogic.gameOver) {
-          return;
-        }
-
-        // 1. Notificar al Game Logic
-        this.gameLogic.animalHit(this.data.points);
-
-        // 2. Ocultar inmediatamente
-        this.el.setAttribute('visible', 'false');
-
-        // 3. Efecto de Escaneo/Partículas
-        var particleEntity = document.createElement('a-entity');
-        particleEntity.setAttribute('particle-system', {
-          preset: 'explosion',
-          color: '#00FF00,#00AA00', // Color verde para éxito
-          duration: 500,
-          maxAge: 0.5,
-          size: 0.2
+                // Comprobar la condición de derrota
+                if (this.dangerLevel >= this.maxDangerLevel) {
+                    this.messageEl.setAttribute('text', {
+                        value: "¡FALLASTE EL RESCATE! El peligro fue demasiado. Presiona ESC para reiniciar.",
+                        color: 'red',
+                        wrapCount: 20
+                    });
+                    this.dangerEl.setAttribute('visible', false);
+                    // Efecto de derrota (mover el león)
+                    this.babyLionEl.setAttribute('position', '-10 0 -3');
+                    this.el.sceneEl.pause(); // Pausa el juego para indicar el fin
+                }
+            }
         });
-        particleEntity.setAttribute('position', this.el.getAttribute('position'));
-        this.el.sceneEl.appendChild(particleEntity);
 
-        // 4. Reposicionar y Mostrar de nuevo (Spawn) después de un pequeño retraso
-        setTimeout(() => {
-          this.gameLogic.spawnTarget(this.el);
-        }, 1000);
-      }
-    });
-  </script>
+        // Componente para los objetos de Curación (RESCATE)
+        AFRAME.registerComponent('rescue-item', {
+            init: function() {
+                var el = this.el;
+                var sceneEl = el.sceneEl;
+                el.classList.add('clickable');
 
-  <script>
-    AFRAME.registerComponent('game-logic', {
-      schema: {
-        initialTime: { type: 'int', default: 60 }, // 60 segundos
-        targetsToWin: { type: 'int', default: 5 }, // 5 animales escaneados para ganar
-        spawnRadius: { type: 'number', default: 15 } // Distancia máxima de aparición
-      },
-      init: function () {
-        this.targetsHit = 0;
-        this.timeLeft = this.data.initialTime;
-        this.gameOver = false;
-        this.targetEntities = document.querySelectorAll('[target-animal]');
-        var sceneEl = this.el;
+                el.addEventListener('click', function() {
+                    if (sceneEl.components['rescue-game-manager'].collectedRescueItems < sceneEl.components['rescue-game-manager'].requiredRescueItems && 
+                        sceneEl.components['rescue-game-manager'].dangerLevel < sceneEl.components['rescue-game-manager'].maxDangerLevel) {
+                        
+                        el.setAttribute('visible', false);
+                        sceneEl.emit('itemCollected');
 
-        // Crear HUD (Heads-Up Display)
-        this.hudText = document.createElement('a-text');
-        this.hudText.setAttribute('value', 'Tiempo: ' + this.timeLeft + 's | Escaneados: 0 / ' + this.data.targetsToWin);
-        this.hudText.setAttribute('position', '0 3.5 -5');
-        this.hudText.setAttribute('align', 'center');
-        this.hudText.setAttribute('width', '5');
-        this.hudText.setAttribute('color', 'white');
-        this.hudText.setAttribute('font', 'mozillavr');
-        sceneEl.appendChild(this.hudText);
-
-        // Iniciar el temporizador
-        this.timerInterval = setInterval(this.updateTimer.bind(this), 1000);
-
-        // Iniciar Spawning de todos los objetivos
-        this.targetEntities.forEach(target => {
-          this.spawnTarget(target);
+                        var feedbackEl = document.getElementById('feedback-temp');
+                        feedbackEl.setAttribute('visible', true);
+                        feedbackEl.setAttribute('text', { value: "+1 Curación", color: 'lime' });
+                        setTimeout(() => { feedbackEl.setAttribute('visible', false); }, 1000);
+                    }
+                });
+                // Efecto Hover
+                el.addEventListener('raycaster-intersected', function () { el.getAttribute('geometry') ? el.setAttribute('scale', '1.2 1.2 1.2') : el.setAttribute('scale', '0.6 0.6 0.6'); });
+                el.addEventListener('raycaster-intersected-cleared', function () { el.getAttribute('geometry') ? el.setAttribute('scale', '1 1 1') : el.setAttribute('scale', '0.5 0.5 0.5'); });
+            }
         });
-      },
 
-      // Función para reposicionar y mostrar el objetivo
-      // ... (cerca de la línea 120-135) ...
+        // NUEVO: Componente para los objetos de Peligro (DAÑO)
+        AFRAME.registerComponent('danger-item', {
+            init: function() {
+                var el = this.el;
+                var sceneEl = el.sceneEl;
+                el.classList.add('clickable');
 
-      // Función para reposicionar y mostrar el objetivo
-      spawnTarget: function (targetEl) {
-        if (this.gameOver) return;
+                el.addEventListener('click', function() {
+                    if (sceneEl.components['rescue-game-manager'].collectedRescueItems < sceneEl.components['rescue-game-manager'].requiredRescueItems && 
+                        sceneEl.components['rescue-game-manager'].dangerLevel < sceneEl.components['rescue-game-manager'].maxDangerLevel) {
+                        
+                        el.setAttribute('visible', false);
+                        sceneEl.emit('dangerCollected');
 
-        // Generar coordenadas aleatorias (X y Z)
-        var randomAngle = Math.random() * 2 * Math.PI;
-        var randomDistance = Math.random() * this.data.spawnRadius;
+                        var feedbackEl = document.getElementById('feedback-temp');
+                        feedbackEl.setAttribute('visible', true);
+                        feedbackEl.setAttribute('text', { value: "¡PELIGRO! +1 Daño", color: 'red' });
+                        setTimeout(() => { feedbackEl.setAttribute('visible', false); }, 1000);
+                    }
+                });
+                // Efecto Hover
+                el.addEventListener('raycaster-intersected', function () { el.setAttribute('scale', '1.2 1.2 1.2'); });
+                el.addEventListener('raycaster-intersected-cleared', function () { el.setAttribute('scale', '1 1 1'); });
+            }
+        });
+    </script>
+    
+    <style>
+        html, body { height: 100%; margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
+        a-scene { position: absolute; inset: 0; }
+        a-scene canvas { background: transparent; }
+    </style>
 
-        var x = Math.cos(randomAngle) * randomDistance;
-        var z = Math.sin(randomAngle) * randomDistance;
-
-        // ✨ SOLUCIÓN: Acceder a la posición inicial directamente del atributo del elemento.
-        // Usamos 'position' ya que es donde se define la altura Y en el HTML.
-        var initialPos = targetEl.getAttribute('position');
-        var y = initialPos ? initialPos.y : 0; // Usar 0 como fallback si falla
-
-        targetEl.setAttribute('position', { x: x, y: y, z: z });
-        targetEl.setAttribute('visible', 'true');
-      },
-      // ...
-
-      updateTimer: function () {
-        if (this.gameOver) return;
-
-        this.timeLeft--;
-        this.updateHud();
-
-        if (this.timeLeft <= 0) {
-          this.gameOver = true;
-          this.hudText.setAttribute('value', '¡TIEMPO AGOTADO! Has escaneado ' + this.targetsHit + ' de ' + this.data.targetsToWin + '.');
-          this.hudText.setAttribute('color', 'red');
-          document.getElementById('back-button').style.display = 'block';
-          clearInterval(this.timerInterval);
-        }
-      },
-
-      animalHit: function (points) {
-        this.targetsHit += points;
-        this.updateHud();
-
-        if (this.targetsHit >= this.data.targetsToWin) {
-          this.gameOver = true;
-          this.hudText.setAttribute('value', '¡VICTORIA! Todos los animales escaneados. Tiempo restante: ' + this.timeLeft + 's');
-          this.hudText.setAttribute('color', 'lime');
-          document.getElementById('back-button').style.display = 'block';
-          // Ocultar todos los objetivos restantes al ganar
-          this.targetEntities.forEach(target => target.setAttribute('visible', 'false'));
-          clearInterval(this.timerInterval);
-        }
-      },
-
-      updateHud: function () {
-        this.hudText.setAttribute('value', 'Tiempo: ' + this.timeLeft + 's | Escaneados: ' + this.targetsHit + ' / ' + this.data.targetsToWin);
-      },
-
-      remove: function () {
-        clearInterval(this.timerInterval);
-      }
-    });
-  </script>
-  <script
-    src="https://unpkg.com/aframe-particle-system-component@1.1.0/dist/aframe-particle-system-component.min.js"></script>
 </head>
 
 <body>
-  <div id="instructions" style="
-        position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000;
-        color: white; background-color: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px;
-        font-family: Arial, sans-serif; text-align: center;">
-    ¡Safari de Precisión! **Mira o haz clic** en los animales cuando aparezcan. ¡Escanea **5** antes de que acabe el
-    tiempo!
-  </div>
+    <a-scene shadow="type: basic" rescue-game-manager> 
+        <a-assets>
+            <img id="cieloSabanaImg" src="../assets/images/cielo_sabana.jpg" alt="Imagen 360 del cielo de la Sabana">
+            <img id="mundoAnimalImg" src="../assets/images/mundoanimal.jpg" alt="Imagen del mundo animal">
 
-  <a-scene renderer="alpha: true" game-logic="initialTime: 60; targetsToWin: 5">
+            <a-asset-item id="arbolModel" src="../assets/models/arbol_magico/scene.gltf"></a-asset-item>
+            <a-asset-item id="lionSeniorModel" src="../assets/models/lionsenior/scene.gltf"></a-asset-item>
+            <a-asset-item id="elephantModel" src="../assets/models/elefante_asiatico/scene.gltf"></a-asset-item>
+            <a-asset-item id="babyLionModel" src="../assets/models/baby_lion/scene.gltf"></a-asset-item>
+            <a-asset-item id="qloneModel" src="../assets/models/new_qlone/scene.gltf"></a-asset-item>
+            <a-asset-item id="botiquinModel" src="../assets/models/botiquin.gltf"></a-asset-item>
 
-    <a-entity camera look-controls wasd-controls position="0 1.6 0" raycaster="objects: .clickable"
-      cursor="rayOrigin: mouse; fuse: true; fuseTimeout: 1000">
-      <a-entity cursor position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-        material="color: green; shader: flat">
-      </a-entity>
-    </a-entity>
+        </a-assets>
 
-    <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#4CAF50" shadow></a-plane>
-    <a-sky color="#87CEEB"></a-sky>
-    <a-entity light="type: ambient; color: #BBB; intensity: 0.5"></a-entity>
-    <a-entity light="type: directional; color: #FFF; intensity: 0.8; castShadow: true" position="-5 10 5"></a-entity>
+        <a-sky src="#cieloSabanaImg"></a-sky>
+        <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#C2B280" shadow
+                 material="shader: standard; repeat: 50 50;"></a-plane>
+        <a-entity light="type: directional; color: #FFF8E1; intensity: 1.5; castShadow: true" position="10 20 -10"></a-entity>
+        <a-entity light="type: ambient; color: #AAA; intensity: 0.8"></a-entity>
 
-    <a-entity target-animal position="-3 0.5 -5" rotation="0 10 0" scale="0.1 0.1 0.1">
-      <a-gltf-model src="../assets/models/lionsenior/scene.gltf"></a-gltf-model>
-    </a-entity>
+        <a-gltf-model src="#arbolModel" position="0 0 -10" rotation="0 0 0" scale="15 15 15" shadow></a-gltf-model>
 
-    <a-entity target-animal position="5 0 -8" rotation="0 -45 0" scale="1 1 1">
-      <a-gltf-model src="../assets/models/elefante_asiatico/scene.gltf"></a-gltf-model>
-    </a-entity>
+        <a-gltf-model src="#lionSeniorModel" position="-10 0 -5" rotation="0 10 0" scale="0.1 0.1 0.1" shadow></a-gltf-model>
+        <a-gltf-model id="baby-lion-model" src="#babyLionModel" position="-10 0 -5" rotation="0 45 0" scale="1 1 1" shadow></a-gltf-model>
+        <a-gltf-model src="#elephantModel" position="12 0 -10" rotation="0 10 0" scale="1 1 1" shadow></a-gltf-model>
+        <a-gltf-model src="#qloneModel" position="8 2 -10" rotation="0 10 0" scale="0.03 0.03 0.03" shadow></a-gltf-model>
 
-    <a-entity target-animal position="1 0.5 -2" rotation="0 180 0" scale="1 1 1">
-      <a-gltf-model src="../assets/models/baby_lion/scene.gltf"></a-gltf-model>
-    </a-entity>
+        <a-gltf-model src="#botiquinModel" position="3 0 -1" rotation="0 45 0" scale="0.5 0.5 0.5" 
+                      rescue-item shadow>
+        </a-gltf-model>
+        
+        <a-cylinder position="-15 0.2 0" radius="0.2" height="0.4" color="#2196F3" rescue-item></a-cylinder>
+        
+        <a-sphere position="10 0.2 -5" radius="0.3" color="#795548" rescue-item></a-sphere>
 
-    <a-gltf-model src="../assets/models/arbol_magico/scene.gltf" position="0 0 -10" rotation="0 0 0" scale="15 15 15"
-      shadow>
-    </a-gltf-model>
 
-  </a-scene>
+        <a-cone position="-12 0.1 -10" radius="0.3" height="0.5" color="#5D4037" 
+                rotation="-90 0 0" danger-item>
+        </a-cone>
 
-  <button id="back-button" onclick="window.location.href='../../index.html'">
-    Volver al Zoo
-  </button>
+        <a-box position="5 0.1 8" width="0.8" height="0.2" depth="0.8" color="#424242" 
+               danger-item>
+        </a-box>
+
+        <a-torus position="-5 0.5 15" radius="0.4" radius-tubular="0.1" color="#F44336" 
+                 danger-item></a-torus>
+
+
+        <a-cylinder position="-10 0.001 -5" radius="4" height="0.05" color="#558B2F" rotation="0 0 0" shadow></a-cylinder>
+        <a-cylinder position="10 0.001 -11" radius="6" height="0.05" color="#558B2F" rotation="0 0 0" shadow></a-cylinder>
+
+        <a-entity id="hud" position="0 1.6 -2" rotation="0 0 0">
+            <a-text id="mensaje-juego" value="Iniciando Rescate..." 
+                    align="center" width="3" color="white" 
+                    background-color="rgba(0,0,0,0.5)" position="0 0 0" font="mozillavr">
+            </a-text>
+            <a-text id="danger-level" value="PELIGRO: 0/3" 
+                    align="center" width="3" color="yellow" 
+                    background-color="rgba(0,0,0,0.5)" position="0 -0.4 0" font="mozillavr">
+            </a-text>
+            <a-text id="feedback-temp" value="" 
+                    align="center" width="2" color="lime" 
+                    position="0 -0.8 0" visible="false" font="mozillavr">
+            </a-text>
+        </a-entity>
+
+        <a-entity id="rig" movement-controls="speed: 0.5; controls: checkpoint, gamepad, trackpad, keyboard, touch">
+            <a-entity camera position="0 1.6 0" look-controls="pointerLockEnabled: false">
+                <a-entity cursor="fuse: true; rayOrigin: mouse;" position="0 0 -1"
+                    geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                    material="color: #FF0000; opacity: 0.8; side: double">
+                </a-entity>
+            </a-entity>
+
+            <a-entity id="leftHand" laser-controls="hand: left"
+                raycaster="objects: .clickable; far: 15"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right"
+                raycaster="objects: .clickable; far: 15"></a-entity>
+        </a-entity>
+    </a-scene>
 </body>
 
 </html>
