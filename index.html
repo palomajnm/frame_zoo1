@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Sala 3D con Mapa Interactivo</title>
@@ -98,9 +99,91 @@
             </a-entity>
         </a-entity>
         
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'WildTrails';
+            src: url('./content/assets/fonts/WildTrails.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'WildTrails', sans-serif;
+        }
+    </style>
+</head>
+
+
+    <a-scene>
+
+        <a-assets>
+            <img id="mundoAnimalImg" src="./content/assets/images/mundoAnimal.jpg" alt="Imagen del mundo animal">
+        </a-assets>
+
+        <a-sky color="#87CEEB"></a-sky>
+
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#A9A9A9" shadow>
+        </a-plane>
+
+        <a-plane id="mapa-pared" position="0 2.5 -9" width="10" height="5" src="#mundoAnimalImg" shadow>
+        </a-plane>
+
+        <a-text value="BIENVENIDOS AL ZOO VIRTUAL" align="center" font="mozillavr" color="black" width="6"
+            position="0 4.5 -8.9" shadow>
+        </a-text>
+
+        <!-- Portal Sabana -->
+        <a-entity position="-1.5 0 0">
+            <a-sphere id="punto-sabana" radius="0.3" position="0.5 2 -8" color="#FF4500" shadow
+                link="href: ./content/pages/sabana.html"
+                animation="property: scale; dir: alternate; dur: 1000; to: 1.1 1.1 1.1; loop: true">
+            </a-sphere>
+
+            <a-text value="LA SABANA" align="center" width="4" color="#000000" position="0 2.5 -8">
+            </a-text>
+        </a-entity>
+
+        <!-- Portal Oceano -->
+        <a-entity position="1.5 0 0">
+            <a-sphere id="punto-oceano" radius="0.3" position="0 2 -8" color="#006994" shadow
+                link="href: ./content/pages/oceano.html"
+                animation="property: scale; dir: alternate; dur: 1000; to: 1.1 1.1 1.1; loop: true">
+            </a-sphere>
+
+            <a-text value="EL OCEANO" align="center" width="4" color="#000000" position="0 2.5 -8">
+            </a-text>
+        </a-entity>
+
+        <a-plane position="-5 2.5 -4" rotation="0 90 0" width="10" height="5" color="#FFF8DC" shadow>
+        </a-plane>
+
+        <a-plane position="5 2.5 -4" rotation="0 -90 0" width="10" height="5" color="#FFF8DC" shadow>
+        </a-plane>
+
+        <!-- VR RIG -->
+        <a-entity id="rig" movement-controls="speed: 0.2; controls: checkpoint, gamepad, trackpad, keyboard, touch">
+            <!-- Camera -->
+            <a-entity camera position="0 1.6 0" look-controls="pointerLockEnabled: false">
+                <a-entity cursor="fuse: false; rayOrigin: mouse;" position="0 0 -1"
+                    geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                    material="color: #00FF00; opacity: 0.8; side: double">
+                </a-entity>
+            </a-entity>
+
+            <!-- Controllers -->
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable; far: 5"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable; far: 5"></a-entity>
+        </a-entity>
+
         <a-entity light="type: ambient; color: #BBB"></a-entity>
         <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-1 1 1"></a-entity>
 
     </a-scene>
 </body>
+
 </html>

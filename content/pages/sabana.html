@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Zoo VR Básico con A-Frame</title>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+  <style>
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      /* Elimina márgenes y barras de desplazamiento */
+      /* Gradiente de fondo: cambia los colores aquí si quieres */
+      background-image: url(../assets/images/cielo_sabana.jpg);
+      font-family: Arial, sans-serif;
+    }
+
+    a-scene {
+      position: absolute;
+      inset: 0;
+    }
+
+    a-scene canvas {
+      background: transparent;
+    }
+
+    #enter-vr-button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+    }
+
+    #instructions {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 5px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+  </style>
+
+</head>
+
+<body>
+  <a-scene>
+    <a-assets>
+      <img id="mundoAnimalImg" src="../assets/images/mundoanimal.jpg" alt="Imagen del mundo animal">
+    </a-assets>
+
+    <!-- Arbol Magico -->
+    <a-gltf-model src="../assets/models/arbol_magico/scene.gltf" position="0 0 -10" rotation="0 0 0" scale="15 15 15"
+      shadow>
+    </a-gltf-model>
+
+    <!-- Link Juego -->
+    <a-plane id="link-juego" position="0 1.2 -7.5" rotation="0 0 0" width="2" height="0.8" color="darkgreen" shadow
+      class="clickable" link="href: ./juego-leones.html; title: Iniciar Juego; visualAspectEnabled: true">
+      <a-text value="JUEGO" align="center" position="0 0.01 0" width="6" color="#FFFFFF" font="mozillavr"
+        font-weight="bold"></a-text>
+    </a-plane>
+
+    <!-- Animales -->
+    <a-gltf-model src="../assets/models/lionsenior/scene.gltf" position="-10 0 -5" rotation="0 10 0" scale="0.1 0.1 0.1"
+      shadow>
+    </a-gltf-model>
+
+    <!--rinoceronte (elefante)-->
+    <a-gltf-model src="../assets/models/elefante_asiatico/scene.gltf" position="12 0 -10" rotation="0 10 0"
+      scale="1 1 1" shadow>
+    </a-gltf-model>
+
+    <a-gltf-model src="../assets/models/new_qlone/scene.gltf" position="8 2 -10" rotation="0 10 0"
+      scale="0.03 0.03 0.03" shadow>
+    </a-gltf-model>
+
+    <!--leon bebe-->
+    <a-gltf-model src="../assets/models/baby_lion/scene.gltf" position="-10 0 -5" rotation="0 45 0" scale="1 1 1"
+      shadow>
+    </a-gltf-model>
+
+    <!--Cilindros de césped-->
+    <a-cylinder position="-10 0 -5" radius="4" height="0.05" color="#558B2F" rotation="0 0 0" shadow>
+    </a-cylinder>
+
+    <a-cylinder position="10 0 -11" radius="6" height="0.05" color="#558B2F" rotation="0 0 0" shadow>
+    </a-cylinder>
+
+    <!-- Textos -->
+    <a-text value="LEONES (Panthera leo)\nDieta: Carnivora\nHabitat: Sabana y pastizales" align="center"
+      position="-10 5 -5" width="5" color="#000000" background-color="#FFFFFF" font="mozillavr">
+    </a-text>
+    <a-text value="ELEFANTES ASIÁTICOS\nEl mamifero terrestre mas grande de Asia.\nDieta: Herbivora" align="center"
+      position="10 5 -10" width="5" color="#000000" background-color="#FFFFFF" font="mozillavr">
+    </a-text>
+
+    <!-- Luces -->
+    <a-entity light="type: ambient; color: #BBB; intensity: 0.5"></a-entity>
+    <a-entity light="type: directional; color: #FFF; intensity: 0.8; castShadow: true" position="-5 10 5"></a-entity>
+
+    <!-- VR RIG -->
+    <a-entity id="rig" movement-controls="speed: 0.5; controls: checkpoint, gamepad, trackpad, keyboard, touch">
+      <!-- Camera -->
+      <a-entity camera position="0 1.6 0" look-controls="pointerLockEnabled: false">
+        <a-entity cursor="fuse: false; rayOrigin: mouse;" position="0 0 -1"
+          geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+          material="color: #00FF00; opacity: 0.8; side: double">
+        </a-entity>
+      </a-entity>
+
+      <!-- Controllers -->
+      <a-entity id="leftHand" laser-controls="hand: left"
+        raycaster="objects: .clickable, .option-button; far: 5"></a-entity>
+      <a-entity id="rightHand" laser-controls="hand: right"
+        raycaster="objects: .clickable, .option-button; far: 5"></a-entity>
+    </a-entity>
+
+  </a-scene>
+</body>
+
+</html>
