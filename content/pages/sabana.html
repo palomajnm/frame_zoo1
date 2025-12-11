@@ -17,7 +17,7 @@
       overflow: hidden;
       /* Elimina márgenes y barras de desplazamiento */
       /* Gradiente de fondo: cambia los colores aquí si quieres */
-      background-image: url(./hermoso-diseno-de-cielo-rojo-y-rosa.jpg);
+      background-image: url(../assets/images/cielo_sabana.jpg);
       font-family: Arial, sans-serif;
     }
 
@@ -66,11 +66,12 @@
 <body>
   <a-scene>
     <a-assets>
-      <img id="mundoAnimalImg" src="./mundoanimal.jpg" alt="Imagen del mundo animal">
+      <img id="mundoAnimalImg" src="../assets/images/mundoanimal.jpg" alt="Imagen del mundo animal">
     </a-assets>
 
     <!-- Arbol Magico -->
-    <a-gltf-model src="./arbol_magico/scene.gltf" position="0 0 -10" rotation="0 0 0" scale="15 15 15" shadow>
+    <a-gltf-model src="../assets/models/arbol_magico/scene.gltf" position="0 0 -10" rotation="0 0 0" scale="15 15 15"
+      shadow>
     </a-gltf-model>
 
     <!-- Link Juego -->
@@ -81,18 +82,22 @@
     </a-plane>
 
     <!-- Animales -->
-    <a-gltf-model src="./lionsenior/scene.gltf" position="-10 0 -5" rotation="0 10 0" scale="0.1 0.1 0.1" shadow>
+    <a-gltf-model src="../assets/models/lionsenior/scene.gltf" position="-10 0 -5" rotation="0 10 0" scale="0.1 0.1 0.1"
+      shadow>
     </a-gltf-model>
 
     <!--rinoceronte (elefante)-->
-    <a-gltf-model src="./elefante_asiatico/scene.gltf" position="12 0 -10" rotation="0 10 0" scale="1 1 1" shadow>
+    <a-gltf-model src="../assets/models/elefante_asiatico/scene.gltf" position="12 0 -10" rotation="0 10 0"
+      scale="1 1 1" shadow>
     </a-gltf-model>
 
-    <a-gltf-model src="./new_qlone/scene.gltf" position="8 2 -10" rotation="0 10 0" scale="0.03 0.03 0.03" shadow>
+    <a-gltf-model src="../assets/models/new_qlone/scene.gltf" position="8 2 -10" rotation="0 10 0"
+      scale="0.03 0.03 0.03" shadow>
     </a-gltf-model>
 
     <!--leon bebe-->
-    <a-gltf-model src="./baby_lion/scene.gltf" position="-10 0 -5" rotation="0 45 0" scale="1 1 1" shadow>
+    <a-gltf-model src="../assets/models/baby_lion/scene.gltf" position="-10 0 -5" rotation="0 45 0" scale="1 1 1"
+      shadow>
     </a-gltf-model>
 
     <!--Cilindros de césped-->
