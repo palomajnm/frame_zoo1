@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <title>Zoo Virtual - Recepción</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
 
     <style>
         @font-face {
             font-family: 'WildTrails';
-            src: url('./WildTrails.ttf') format('truetype');
+            src: url('./content/assets/fonts/WildTrails.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -27,322 +28,247 @@
     <a-scene>
 
         <a-assets>
-            <img id="mundoAnimalImg" src="./mundoanimal.jpg" alt="Imagen del mundo animal">
+            <img id="mundoAnimalImg" src="./content/assets/images/mundoAnimal.jpg" alt="Imagen del mundo animal">
         </a-assets>
 
-        <a-sky color="#87CEEB"></a-sky>
+        <!-- Cielo -->
+        <a-sky color="#D4E6F1"></a-sky>
 
-        <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#A9A9A9" shadow>
+        <!-- SUELO MEJORADO (Madera) -->
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="12" height="10" color="#8B6F47"
+            material="roughness: 0.8; metalness: 0.1" shadow="receive: true">
         </a-plane>
 
-        <a-plane id="mapa-pared" position="0 2.5 -9" width="10" height="5" src="#mundoAnimalImg" shadow>
+        <!-- PAREDES MEJORADAS -->
+        <!-- Pared trasera (con mapa) -->
+        <a-plane position="0 2.5 -9" rotation="0 0 0" width="12" height="5" color="#E8DCC8" material="roughness: 0.9"
+            shadow="receive: true">
         </a-plane>
 
-        <a-text value="BIENVENIDOS AL ZOO VIRTUAL" align="center" font="mozillavr" color="black" width="6"
-            position="0 4.5 -8.9" shadow>
+        <!-- Pared izquierda -->
+        <a-plane position="-6 2.5 -4" rotation="0 90 0" width="10" height="5" color="#E8DCC8" material="roughness: 0.9"
+            shadow="receive: true">
+        </a-plane>
+
+        <!-- Pared derecha -->
+        <a-plane position="6 2.5 -4" rotation="0 -90 0" width="10" height="5" color="#E8DCC8" material="roughness: 0.9"
+            shadow="receive: true">
+        </a-plane>
+
+        <!-- MAPA EN LA PARED -->
+        <a-plane id="mapa-pared" position="0 2.5 -8.81" width="10" height="5" src="#mundoAnimalImg" shadow="cast: true">
+        </a-plane>
+
+        <!-- Marco del mapa -->
+        <a-box position="0 2.5 -8.84" width="10.2" height="5.2" depth="0.05" color="#654321"
+            material="roughness: 0.3; metalness: 0.2">
+        </a-box>
+
+        <!-- TÍTULO -->
+        <a-text value="BIENVENIDOS AL ZOO VIRTUAL" align="center" font="mozillavr" color="#2C1810" width="7"
+            position="0 4.8 -8.8" shadow="cast: true">
         </a-text>
 
-        <a-entity>
+        <!-- PIN DE MAPA - SABANA -->
+        <a-entity position="0 2.5 -8.7">
+            <a-cone id="pin-sabana" radius-bottom="0.15" radius-top="0.02" height="0.2" color="#FF4500"
+                link="href: ./content/pages/sabana.html"
+                animation__hover="property: scale; to: 1.2 1.2 1.2; startEvents: mouseenter; dur: 200"
+                animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200"
+                animation="property: scale; dir: alternate; dur: 1000; to: 1.1 1.1 1.1; loop: true" shadow="cast: true">
+            </a-cone>
 
-            <a-sphere id="punto-sabana" radius="0.2" position="0.5 2 -8" color="#FF4500" shadow
-                link="href: ./laSabana/sabana.html">
+            <a-sphere radius="0.12" position="0 0.2 0" color="#FF6B35"
+                animation="property: position; to: 0 0.25 0; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine"
+                shadow="cast: true">
             </a-sphere>
 
-            <a-text value="LA SABANA" align="center" width="2" color="#000000" position="0 3.8 -8.8" rotation="0 0 0">
+            <a-text value="LA SABANA" align="center" width="3" color="#2C1810" position="0 -0.5 0.1">
             </a-text>
-
         </a-entity>
 
-        <a-plane position="-5 2.5 -4" rotation="0 90 0" width="10" height="5" color="#FFF8DC" shadow>
-        </a-plane>
+        <!-- PIN DE MAPA - OCEANO -->
+        <a-entity position="1.7 1.8 -8.7">
+            <a-cone id="pin-oceano" radius-bottom="0.15" radius-top="0.02" height="0.2" color="#006994"
+                link="href: ./content/pages/oceano.html"
+                animation__hover="property: scale; to: 1.2 1.2 1.2; startEvents: mouseenter; dur: 200"
+                animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200"
+                animation="property: scale; dir: alternate; dur: 1000; to: 1.1 1.1 1.1; loop: true" shadow="cast: true">
+            </a-cone>
 
-        <a-plane position="5 2.5 -4" rotation="0 -90 0" width="10" height="5" color="#FFF8DC" shadow>
-        </a-plane>
+            <a-sphere radius="0.12" position="0 0.2 0" color="#4A90E2"
+                animation="property: position; to: 0 0.25 0; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine"
+                shadow="cast: true">
+            </a-sphere>
 
-        <a-entity camera look-controls keyboard-controls="movementEnabled: true"
-            movement-controls="speed: 0.2; controls: [keyboard, touch]" position="0 1.6 0">
+            <a-text value="EL OCEANO" align="center" width="3" color="#2C1810" position="0 -0.5 0.1">
+            </a-text>
+        </a-entity>
 
-            <a-entity cursor="fuse: false" position="0 0 -1"
-                geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-                material="color: #00FF00; opacity: 0.8; side: double">
+        <!-- PIN DE MAPA - DINOSAURIOS -->
+        <a-entity position="-1.5 3.5 -8.7">
+            <a-cone id="pin-dinosaurios" radius-bottom="0.15" radius-top="0.02" height="0.2" color="#228B22"
+                link="href: ./content/pages/dinosaurios.html"
+                animation__hover="property: scale; to: 1.2 1.2 1.2; startEvents: mouseenter; dur: 200"
+                animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200"
+                animation="property: scale; dir: alternate; dur: 1000; to: 1.1 1.1 1.1; loop: true" shadow="cast: true">
+            </a-cone>
+
+            <a-sphere radius="0.12" position="0 0.2 0" color="#32CD32"
+                animation="property: position; to: 0 0.25 0; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine"
+                shadow="cast: true">
+            </a-sphere>
+
+            <a-text value="DINOSAURIOS" align="center" width="3" color="#2C1810" position="0 -0.5 0.1">
+            </a-text>
+        </a-entity>
+
+
+        <!-- MUEBLES Y DECORACIÓN -->
+
+        <!-- Mesa de recepción (centro) -->
+        <a-box position="0 0.5 -2" width="3" height="1" depth="1" color="#654321"
+            material="roughness: 0.5; metalness: 0.1" shadow="cast: true; receive: true">
+        </a-box>
+
+        <!-- Sillas laterales -->
+        <!-- Silla izquierda -->
+        <a-entity position="-4 0 -1">
+            <!-- Asiento -->
+            <a-box position="0 0.3 0" width="0.6" height="0.1" depth="0.6" color="#8B4513" shadow="cast: true">
+            </a-box>
+            <!-- Respaldo -->
+            <a-box position="0 0.6 -0.25" width="0.6" height="0.6" depth="0.1" color="#8B4513" shadow="cast: true">
+            </a-box>
+            <!-- Patas -->
+            <a-cylinder radius="0.03" height="0.3" position="-0.2 0.15 -0.2" color="#654321" shadow="cast: true">
+            </a-cylinder>
+            <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 -0.2" color="#654321" shadow="cast: true">
+            </a-cylinder>
+            <a-cylinder radius="0.03" height="0.3" position="-0.2 0.15 0.2" color="#654321" shadow="cast: true">
+            </a-cylinder>
+            <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 0.2" color="#654321" shadow="cast: true">
+            </a-cylinder>
+        </a-entity>
+        <a-entity id="avion" position="0 0.85 -2">
+            <a-gltf-model src="../content/assets/models/avion/plane.glb" scale="0.4 0.4 0.4" rotation="0 35 0" shadow
+                animation-mixer>
+            </a-gltf-model>
+        </a-entity>
+        <!-- Silla derecha -->
+        <a-entity position="4 0 -1">
+            <!-- Asiento -->
+            <a-box position="0 0.3 0" width="0.6" height="0.1" depth="0.6" color="#8B4513" shadow="cast: true">
+            </a-box>
+            <!-- Respaldo -->
+            <a-box position="0 0.6 -0.25" width="0.6" height="0.6" depth="0.1" color="#8B4513" shadow="cast: true">
+            </a-box>
+            <!-- Patas -->
+            <a-cylinder radius="0.03" height="0.3" position="-0.2 0.15 -0.2" color="#654321" shadow="cast: true">
+            </a-cylinder>
+            <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 -0.2" color="#654321" shadow="cast: true">
+            </a-cylinder>
+            <a-cylinder radius="0.03" height="0.3" position="-0.2 0.15 0.2" color="#654321" shadow="cast: true">
+            </a-cylinder>
+            <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 0.2" color="#654321" shadow="cast: true">
+            </a-cylinder>
+        </a-entity>
+
+        <!-- Plantas decorativas -->
+        <!-- Planta izquierda -->
+        <a-entity position="-5 0 -6">
+            <!-- Maceta -->
+            <a-cylinder radius="0.3" height="0.5" color="#8B4513" shadow="cast: true">
+            </a-cylinder>
+            <!-- Planta -->
+            <a-cone radius-bottom="0.4" radius-top="0.1" height="1.2" position="0 0.85 0" color="#228B22"
+                shadow="cast: true">
+            </a-cone>
+        </a-entity>
+
+        <!-- Planta derecha -->
+        <a-entity position="5 0 -6">
+            <!-- Maceta -->
+            <a-cylinder radius="0.3" height="0.5" color="#8B4513" shadow="cast: true">
+            </a-cylinder>
+            <!-- Planta -->
+            <a-cone radius-bottom="0.4" radius-top="0.1" height="1.2" position="0 0.85 0" color="#228B22"
+                shadow="cast: true">
+            </a-cone>
+        </a-entity>
+
+        <!-- Estanterías laterales (más pegadas a la pared) -->
+        <!-- Estantería izquierda -->
+        <a-box position="-5.95 1.5 -4" width="0.2" height="3" depth="2" color="#654321" material="roughness: 0.6"
+            shadow="cast: true; receive: true">
+        </a-box>
+
+        <!-- Estantería derecha -->
+        <a-box position="5.95 1.5 -4" width="0.2" height="3" depth="2" color="#654321" material="roughness: 0.6"
+            shadow="cast: true; receive: true">
+        </a-box>
+
+        <!-- Lámparas de pie -->
+        <!-- Lámpara izquierda -->
+        <a-entity position="-4 0 -6">
+            <!-- Base -->
+            <a-cylinder radius="0.2" height="0.05" color="#654321" shadow="cast: true">
+            </a-cylinder>
+            <!-- Poste -->
+            <a-cylinder radius="0.03" height="1.8" position="0 0.9 0" color="#654321" shadow="cast: true">
+            </a-cylinder>
+            <!-- Pantalla -->
+            <a-cone radius-bottom="0.3" radius-top="0.15" height="0.4" position="0 1.9 0" color="#F5DEB3"
+                material="emissive: #FFD700; emissiveIntensity: 0.6" shadow="cast: true">
+            </a-cone>
+        </a-entity>
+
+        <!-- Lámpara derecha -->
+        <a-entity position="4 0 -6">
+            <!-- Base -->
+            <a-cylinder radius="0.2" height="0.05" color="#654321" shadow="cast: true">
+            </a-cylinder>
+            <!-- Poste -->
+            <a-cylinder radius="0.03" height="1.8" position="0 0.9 0" color="#654321" shadow="cast: true">
+            </a-cylinder>
+            <!-- Pantalla -->
+            <a-cone radius-bottom="0.3" radius-top="0.15" height="0.4" position="0 1.9 0" color="#F5DEB3"
+                material="emissive: #FFD700; emissiveIntensity: 0.6" shadow="cast: true">
+            </a-cone>
+        </a-entity>
+
+        <!-- ILUMINACIÓN MEJORADA -->
+        <a-entity light="type: ambient; color: #FFF; intensity: 0.4"></a-entity>
+
+        <!-- Luces principales (desde lámparas) -->
+        <a-entity light="type: point; color: #FFF8DC; intensity: 1.2; castShadow: true; shadowCameraVisible: false"
+            position="-3 4.3 -4">
+        </a-entity>
+
+        <a-entity light="type: point; color: #FFF8DC; intensity: 1.2; castShadow: true; shadowCameraVisible: false"
+            position="3 4.3 -4">
+        </a-entity>
+
+        <!-- Luz direccional para sombras generales -->
+        <a-entity light="type: directional; color: #FFF; intensity: 0.5; castShadow: true" position="2 5 2">
+        </a-entity>
+
+        <!-- VR RIG -->
+        <a-entity id="rig" movement-controls="speed: 0.2; controls: checkpoint, gamepad, trackpad, keyboard, touch">
+            <!-- Camera -->
+            <a-entity camera position="0 1.6 0" look-controls="pointerLockEnabled: false">
+                <a-entity cursor="fuse: false; rayOrigin: mouse;" position="0 0 -1"
+                    geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                    material="color: #FFD700; opacity: 0.9; side: double">
+                </a-entity>
             </a-entity>
+
+            <!-- Controllers -->
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable; far: 5"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable; far: 5"></a-entity>
         </a-entity>
 
-        <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
-
-        <style>
-            @font-face {
-                font-family: 'WildTrails';
-                src: url('./content/assets/fonts/WildTrails.ttf') format('truetype');
-                font-weight: normal;
-                font-style: normal;
-                font-display: swap;
-            }
-
-            body {
-                margin: 0;
-                overflow: hidden;
-                font-family: 'WildTrails', sans-serif;
-            }
-        </style>
-        </head>
-
-        <body>
-            <a-scene>
-
-                <a-assets>
-                    <img id="mundoAnimalImg" src="./content/assets/images/mundoAnimal.jpg"
-                        alt="Imagen del mundo animal">
-                </a-assets>
-
-                <!-- Cielo -->
-                <a-sky color="#D4E6F1"></a-sky>
-
-                <!-- SUELO MEJORADO (Madera) -->
-                <a-plane position="0 0 -4" rotation="-90 0 0" width="12" height="10" color="#8B6F47"
-                    material="roughness: 0.8; metalness: 0.1" shadow="receive: true">
-                </a-plane>
-
-                <!-- PAREDES MEJORADAS -->
-                <!-- Pared trasera (con mapa) -->
-                <a-plane position="0 2.5 -9" rotation="0 0 0" width="12" height="5" color="#E8DCC8"
-                    material="roughness: 0.9" shadow="receive: true">
-                </a-plane>
-
-                <!-- Pared izquierda -->
-                <a-plane position="-6 2.5 -4" rotation="0 90 0" width="10" height="5" color="#E8DCC8"
-                    material="roughness: 0.9" shadow="receive: true">
-                </a-plane>
-
-                <!-- Pared derecha -->
-                <a-plane position="6 2.5 -4" rotation="0 -90 0" width="10" height="5" color="#E8DCC8"
-                    material="roughness: 0.9" shadow="receive: true">
-                </a-plane>
-
-                <!-- MAPA EN LA PARED -->
-                <a-plane id="mapa-pared" position="0 2.5 -8.81" width="10" height="5" src="#mundoAnimalImg"
-                    shadow="cast: true">
-                </a-plane>
-
-                <!-- Marco del mapa -->
-                <a-box position="0 2.5 -8.84" width="10.2" height="5.2" depth="0.05" color="#654321"
-                    material="roughness: 0.3; metalness: 0.2">
-                </a-box>
-
-                <!-- TÍTULO -->
-                <a-text value="BIENVENIDOS AL ZOO VIRTUAL" align="center" font="mozillavr" color="#2C1810" width="7"
-                    position="0 4.8 -8.8" shadow="cast: true">
-                </a-text>
-
-                <!-- PIN DE MAPA - SABANA -->
-                <a-entity position="0 2.5 -8.7">
-                    <a-cone id="pin-sabana" radius-bottom="0.15" radius-top="0.02" height="0.2" color="#FF4500"
-                        link="href: ./content/pages/sabana.html"
-                        animation__hover="property: scale; to: 1.2 1.2 1.2; startEvents: mouseenter; dur: 200"
-                        animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200"
-                        animation="property: scale; dir: alternate; dur: 1000; to: 1.1 1.1 1.1; loop: true"
-                        shadow="cast: true">
-                    </a-cone>
-
-                    <a-sphere radius="0.12" position="0 0.2 0" color="#FF6B35"
-                        animation="property: position; to: 0 0.25 0; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine"
-                        shadow="cast: true">
-                    </a-sphere>
-
-                    <a-text value="LA SABANA" align="center" width="3" color="#2C1810" position="0 -0.5 0.1">
-                    </a-text>
-                </a-entity>
-
-                <!-- PIN DE MAPA - OCEANO -->
-                <a-entity position="1.7 1.8 -8.7">
-                    <a-cone id="pin-oceano" radius-bottom="0.15" radius-top="0.02" height="0.2" color="#006994"
-                        link="href: ./content/pages/oceano.html"
-                        animation__hover="property: scale; to: 1.2 1.2 1.2; startEvents: mouseenter; dur: 200"
-                        animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200"
-                        animation="property: scale; dir: alternate; dur: 1000; to: 1.1 1.1 1.1; loop: true"
-                        shadow="cast: true">
-                    </a-cone>
-
-                    <a-sphere radius="0.12" position="0 0.2 0" color="#4A90E2"
-                        animation="property: position; to: 0 0.25 0; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine"
-                        shadow="cast: true">
-                    </a-sphere>
-
-                    <a-text value="EL OCEANO" align="center" width="3" color="#2C1810" position="0 -0.5 0.1">
-                    </a-text>
-                </a-entity>
-
-                <!-- PIN DE MAPA - DINOSAURIOS -->
-                <a-entity position="-1.5 3.5 -8.7">
-                    <a-cone id="pin-dinosaurios" radius-bottom="0.15" radius-top="0.02" height="0.2" color="#228B22"
-                        link="href: ./content/pages/dinosaurios.html"
-                        animation__hover="property: scale; to: 1.2 1.2 1.2; startEvents: mouseenter; dur: 200"
-                        animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200"
-                        animation="property: scale; dir: alternate; dur: 1000; to: 1.1 1.1 1.1; loop: true"
-                        shadow="cast: true">
-                    </a-cone>
-
-                    <a-sphere radius="0.12" position="0 0.2 0" color="#32CD32"
-                        animation="property: position; to: 0 0.25 0; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine"
-                        shadow="cast: true">
-                    </a-sphere>
-
-                    <a-text value="DINOSAURIOS" align="center" width="3" color="#2C1810" position="0 -0.5 0.1">
-                    </a-text>
-                </a-entity>
-
-                <!-- MUEBLES Y DECORACIÓN -->
-
-                <!-- Mesa de recepción (centro) -->
-                <a-box position="0 0.5 -2" width="3" height="1" depth="1" color="#654321"
-                    material="roughness: 0.5; metalness: 0.1" shadow="cast: true; receive: true">
-                </a-box>
-
-                <!-- Sillas laterales -->
-                <!-- Silla izquierda -->
-                <a-entity position="-4 0 -1">
-                    <!-- Asiento -->
-                    <a-box position="0 0.3 0" width="0.6" height="0.1" depth="0.6" color="#8B4513" shadow="cast: true">
-                    </a-box>
-                    <!-- Respaldo -->
-                    <a-box position="0 0.6 -0.25" width="0.6" height="0.6" depth="0.1" color="#8B4513"
-                        shadow="cast: true">
-                    </a-box>
-                    <!-- Patas -->
-                    <a-cylinder radius="0.03" height="0.3" position="-0.2 0.15 -0.2" color="#654321"
-                        shadow="cast: true"></a-cylinder>
-                    <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 -0.2" color="#654321"
-                        shadow="cast: true"></a-cylinder>
-                    <a-cylinder radius="0.03" height="0.3" position="-0.2 0.15 0.2" color="#654321"
-                        shadow="cast: true"></a-cylinder>
-                    <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 0.2" color="#654321"
-                        shadow="cast: true"></a-cylinder>
-                </a-entity>
-                <a-entity id="avion" position="0 0.85 -2">
-                    <a-gltf-model src="../content/assets/models/avion/plane.glb" scale="0.4 0.4 0.4" rotation="0º 35 0"
-                        shadow animation-mixer>
-                    </a-gltf-model>
-                </a-entity>
-                <!-- Silla derecha -->
-                <a-entity position="4 0 -1">
-                    <!-- Asiento -->
-                    <a-box position="0 0.3 0" width="0.6" height="0.1" depth="0.6" color="#8B4513" shadow="cast: true">
-                    </a-box>
-                    <!-- Respaldo -->
-                    <a-box position="0 0.6 -0.25" width="0.6" height="0.6" depth="0.1" color="#8B4513"
-                        shadow="cast: true">
-                    </a-box>
-                    <!-- Patas -->
-                    <a-cylinder radius="0.03" height="0.3" position="-0.2 0.15 -0.2" color="#654321"
-                        shadow="cast: true"></a-cylinder>
-                    <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 -0.2" color="#654321"
-                        shadow="cast: true"></a-cylinder>
-                    <a-cylinder radius="0.03" height="0.3" position="-0.2 0.15 0.2" color="#654321"
-                        shadow="cast: true"></a-cylinder>
-                    <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 0.2" color="#654321"
-                        shadow="cast: true"></a-cylinder>
-                </a-entity>
-
-                <!-- Plantas decorativas -->
-                <!-- Planta izquierda -->
-                <a-entity position="-5 0 -6">
-                    <!-- Maceta -->
-                    <a-cylinder radius="0.3" height="0.5" color="#8B4513" shadow="cast: true">
-                    </a-cylinder>
-                    <!-- Planta -->
-                    <a-cone radius-bottom="0.4" radius-top="0.1" height="1.2" position="0 0.85 0" color="#228B22"
-                        shadow="cast: true">
-                    </a-cone>
-                </a-entity>
-
-                <!-- Planta derecha -->
-                <a-entity position="5 0 -6">
-                    <!-- Maceta -->
-                    <a-cylinder radius="0.3" height="0.5" color="#8B4513" shadow="cast: true">
-                    </a-cylinder>
-                    <!-- Planta -->
-                    <a-cone radius-bottom="0.4" radius-top="0.1" height="1.2" position="0 0.85 0" color="#228B22"
-                        shadow="cast: true">
-                    </a-cone>
-                </a-entity>
-
-                <!-- Estanterías laterales (más pegadas a la pared) -->
-                <!-- Estantería izquierda -->
-                <a-box position="-5.95 1.5 -4" width="0.2" height="3" depth="2" color="#654321"
-                    material="roughness: 0.6" shadow="cast: true; receive: true">
-                </a-box>
-
-                <!-- Estantería derecha -->
-                <a-box position="5.95 1.5 -4" width="0.2" height="3" depth="2" color="#654321" material="roughness: 0.6"
-                    shadow="cast: true; receive: true">
-                </a-box>
-
-                <!-- Lámparas de pie -->
-                <!-- Lámpara izquierda -->
-                <a-entity position="-4 0 -6">
-                    <!-- Base -->
-                    <a-cylinder radius="0.2" height="0.05" color="#654321" shadow="cast: true">
-                    </a-cylinder>
-                    <!-- Poste -->
-                    <a-cylinder radius="0.03" height="1.8" position="0 0.9 0" color="#654321" shadow="cast: true">
-                    </a-cylinder>
-                    <!-- Pantalla -->
-                    <a-cone radius-bottom="0.3" radius-top="0.15" height="0.4" position="0 1.9 0" color="#F5DEB3"
-                        material="emissive: #FFD700; emissiveIntensity: 0.6" shadow="cast: true">
-                    </a-cone>
-                </a-entity>
-
-                <!-- Lámpara derecha -->
-                <a-entity position="4 0 -6">
-                    <!-- Base -->
-                    <a-cylinder radius="0.2" height="0.05" color="#654321" shadow="cast: true">
-                    </a-cylinder>
-                    <!-- Poste -->
-                    <a-cylinder radius="0.03" height="1.8" position="0 0.9 0" color="#654321" shadow="cast: true">
-                    </a-cylinder>
-                    <!-- Pantalla -->
-                    <a-cone radius-bottom="0.3" radius-top="0.15" height="0.4" position="0 1.9 0" color="#F5DEB3"
-                        material="emissive: #FFD700; emissiveIntensity: 0.6" shadow="cast: true">
-                    </a-cone>
-                </a-entity>
-
-                <!-- ILUMINACIÓN MEJORADA -->
-                <a-entity light="type: ambient; color: #FFF; intensity: 0.4"></a-entity>
-
-                <!-- Luces principales (desde lámparas) -->
-                <a-entity
-                    light="type: point; color: #FFF8DC; intensity: 1.2; castShadow: true; shadowCameraVisible: false"
-                    position="-3 4.3 -4">
-                </a-entity>
-
-                <a-entity
-                    light="type: point; color: #FFF8DC; intensity: 1.2; castShadow: true; shadowCameraVisible: false"
-                    position="3 4.3 -4">
-                </a-entity>
-
-                <!-- Luz direccional para sombras generales -->
-                <a-entity light="type: directional; color: #FFF; intensity: 0.5; castShadow: true" position="2 5 2">
-                </a-entity>
-
-                <!-- VR RIG -->
-                <a-entity id="rig"
-                    movement-controls="speed: 0.2; controls: checkpoint, gamepad, trackpad, keyboard, touch">
-                    <!-- Camera -->
-                    <a-entity camera position="0 1.6 0" look-controls="pointerLockEnabled: false">
-                        <a-entity cursor="fuse: false; rayOrigin: mouse;" position="0 0 -1"
-                            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-                            material="color: #FFD700; opacity: 0.9; side: double">
-                        </a-entity>
-                    </a-entity>
-
-                    <!-- Controllers -->
-                    <a-entity id="leftHand" laser-controls="hand: left"
-                        raycaster="objects: .clickable; far: 5"></a-entity>
-                    <a-entity id="rightHand" laser-controls="hand: right"
-                        raycaster="objects: .clickable; far: 5"></a-entity>
-                </a-entity>
-
-            </a-scene>
-        </body>
+    </a-scene>
+</body>
 
 </html>
