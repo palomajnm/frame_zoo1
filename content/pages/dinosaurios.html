@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hábitat de Dinosaurios - Zoo Virtual</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+
+    <script>
+        // Generador de Rocas Volcánicas
+        AFRAME.registerComponent('volcanic-rocks', {
+            schema: {
+                count: { type: 'int', default: 80 },
+                radius: { type: 'int', default: 200 }
+            },
+            init: function () {
+                // Solo rocas volcánicas, sin vegetación
+                for (let i = 0; i < this.data.count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * this.data.radius;
+                    const x = Math.cos(angle) * distance;
+                    const z = Math.sin(angle) * distance;
+
+                    this.createRock(x, z);
+                }
+            },
+
+            createRock: function (x, z) {
+                const rock = document.createElement('a-entity');
+                rock.setAttribute('position', `${x} 0 ${z}`);
+
+                // Roca volcánica (más pequeña)
+                const boulder = document.createElement('a-icosahedron');
+                const size = 0.3 + Math.random() * 0.9; // Reducido de 0.5-2.5 a 0.3-1.2
+                boulder.setAttribute('radius', size);
+                boulder.setAttribute('position', `0 ${size / 2} 0`);
+                boulder.setAttribute('color', `#${Math.floor(Math.random() * 2) ? '4A4A4A' : '2F2F2F'}`);
+                boulder.setAttribute('shadow', 'cast: true; receive: true');
+                boulder.setAttribute('rotation', `${Math.random() * 360} ${Math.random() * 360} ${Math.random() * 360}`);
+
+                rock.appendChild(boulder);
+                this.el.appendChild(rock);
+            }
+        });
+
+        // Componente para forzar carga de texturas
+        AFRAME.registerComponent('fix-materials', {
+            init: function () {
+                const el = this.el;
+                el.addEventListener('model-loaded', () => {
+                    setTimeout(() => {
+                        const mesh = el.getObject3D('mesh');
+                        if (mesh) {
+                            mesh.traverse((node) => {
+                                if (node.material) {
+                                    node.material.needsUpdate = true;
+                                }
+                            });
+                        }
+                    }, 100);
+                });
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <a-scene fog="type: linear; color: #FF6B35; near: 10; far: 300">
+
+        <!-- Cielo volcánico -->
+        <a-sky color="#FF8C42"></a-sky>
+
+        <!-- Suelo volcánico -->
+        <a-plane position="0 0 0" rotation="-90 0 0" width="500" height="500" color="#5C4033" material="roughness: 0.9"
+            shadow="receive: true">
+        </a-plane>
+
+        <!-- Rocas volcánicas (sin vegetación) -->
+        <a-entity volcanic-rocks="count: 80; radius: 200" position="0 0 0"></a-entity>
+
+        <!-- VOLCÁN MEJORADO -->
+        <a-entity position="-50 0 -80">
+            <!-- Base de la montaña (más ancha) -->
+            <a-cone radius-bottom="40" radius-top="20" height="40" position="0 20 0" color="#2F2F2F"
+                material="roughness: 1" shadow="cast: true; receive: true">
+            </a-cone>
+
+            <!-- Parte media -->
+            <a-cone radius-bottom="20" radius-top="8" height="30" position="0 55 0" color="#3A3A3A"
+                material="roughness: 0.9" shadow="cast: true; receive: true">
+            </a-cone>
+
+            <!-- Cráter -->
+            <a-cylinder radius="7" height="3" position="0 69 0" color="#1A1A1A" shadow="receive: true">
+            </a-cylinder>
+
+            <!-- Lava del cráter (pulsante) -->
+            <a-cylinder radius="6" height="0.8" position="0 69.5 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.9"
+                animation="property: components.material.material.emissiveIntensity; from: 0.7; to: 1.2; dir: alternate; dur: 2000; loop: true">
+            </a-cylinder>
+
+            <!-- ERUPCIÓN VOLCÁNICA -->
+
+            <!-- Columna de Humo (Esferas subiendo y desvaneciéndose) -->
+            <a-entity position="0 70 0">
+                <a-sphere color="#222" opacity="0.8" transparent="true" radius="5"
+                    animation="property: position; to: 0 40 0; dur: 4000; easing: easeOutQuad; loop: true"
+                    animation__scale="property: scale; to: 3 3 3; dur: 4000; easing: linear; loop: true"
+                    animation__op="property: material.opacity; to: 0; dur: 4000; easing: easeInQuad; loop: true">
+                </a-sphere>
+                <a-sphere color="#333" opacity="0.7" transparent="true" radius="4"
+                    animation="property: position; to: 5 35 5; dur: 3500; easing: easeOutQuad; loop: true; delay: 1000"
+                    animation__scale="property: scale; to: 4 4 4; dur: 3500; easing: linear; loop: true; delay: 1000"
+                    animation__op="property: material.opacity; to: 0; dur: 3500; easing: easeInQuad; loop: true; delay: 1000">
+                </a-sphere>
+                <a-sphere color="#111" opacity="0.9" transparent="true" radius="6"
+                    animation="property: position; to: -5 45 -5; dur: 5000; easing: easeOutQuad; loop: true; delay: 2000"
+                    animation__scale="property: scale; to: 5 5 5; dur: 5000; easing: linear; loop: true; delay: 2000"
+                    animation__op="property: material.opacity; to: 0; dur: 5000; easing: easeInQuad; loop: true; delay: 2000">
+                </a-sphere>
+            </a-entity>
+
+            <!-- Rocas Expulsadas (Proyectiles balísticos) -->
+            <a-entity position="0 70 0">
+                <!-- Roca 1 -->
+                <a-dodecahedron color="#FF4500" radius="1.5" material="emissive: #FF0000; emissiveIntensity: 2"
+                    animation="property: position; from: 0 0 0; to: 15 30 15; dur: 2000; easing: easeOutQuad; dir: alternate; loop: true"
+                    animation__rot="property: rotation; to: 360 360 0; loop: true; dur: 1000">
+                </a-dodecahedron>
+                <!-- Roca 2 -->
+                <a-dodecahedron color="#FF6347" radius="1" material="emissive: #FF2200; emissiveIntensity: 2"
+                    animation="property: position; from: 0 0 0; to: -20 40 5; dur: 2500; easing: easeOutQuad; dir: alternate; loop: true; delay: 500"
+                    animation__rot="property: rotation; to: 0 360 360; loop: true; dur: 1200">
+                </a-dodecahedron>
+                <!-- Roca 3 -->
+                <a-dodecahedron color="#FF0000" radius="1.2" material="emissive: #FF0000; emissiveIntensity: 2"
+                    animation="property: position; from: 0 0 0; to: 5 35 -20; dur: 2200; easing: easeOutQuad; dir: alternate; loop: true; delay: 1200"
+                    animation__rot="property: rotation; to: 360 0 360; loop: true; dur: 800">
+                </a-dodecahedron>
+            </a-entity>
+
+            <!-- Resplandor Inestable de Erupción -->
+            <a-entity light="type: point; color: #FF2200; intensity: 3; distance: 100; decay: 1.5" position="0 80 0"
+                animation="property: light.intensity; from: 3; to: 8; dir: alternate; dur: 100; loop: true; easing: linear">
+            </a-entity>
+        </a-entity>
+
+        <!-- RÍO DE LAVA MEJORADO (Más realista) -->
+        <a-entity position="0 0.05 0">
+            <!-- Sección 1: Desde el volcán -->
+            <a-box width="6" height="0.2" depth="40" position="-30 0 -60" rotation="0 -15 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.8"
+                animation="property: components.material.material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: 1800; loop: true"
+                shadow="cast: true">
+            </a-box>
+
+            <!-- Sección 2: Curva -->
+            <a-box width="7" height="0.2" depth="50" position="-10 0 -35" rotation="0 30 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.8"
+                animation="property: components.material.material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: 1800; loop: true; delay: 600"
+                shadow="cast: true">
+            </a-box>
+
+            <!-- Sección 3: Recta principal -->
+            <a-box width="8" height="0.2" depth="60" position="15 0 -5" rotation="0 10 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.8"
+                animation="property: components.material.material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: 1800; loop: true; delay: 1200"
+                shadow="cast: true">
+            </a-box>
+
+            <!-- Sección 4: Final más estrecha -->
+            <a-box width="5" height="0.2" depth="40" position="25 0 30" rotation="0 -5 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.8"
+                animation="property: components.material.material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: 1800; loop: true; delay: 300"
+                shadow="cast: true">
+            </a-box>
+
+            <!-- Luces del río (más distribuidas) -->
+            <a-entity light="type: point; color: #FF6600; intensity: 1.2; distance: 15" position="-30 1 -60"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.2; distance: 15" position="-10 1 -35"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.2; distance: 15" position="15 1 -5"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.2; distance: 15" position="25 1 30"></a-entity>
+        </a-entity>
+
+        <!-- Texto de bienvenida -->
+        <a-text value="MUNDO DE DINOSAURIOS" align="center" position="0 3 -4" width="8" color="#FFFFFF" font="mozillavr"
+            shadow
+            animation="property: position; to: 0 3.3 -4; dir: alternate; dur: 4000; loop: true; easing: easeInOutSine">
+        </a-text>
+
+        <a-text value="Era Prehistórica" align="center" position="0 2.5 -4" width="4" color="#FFD700" font="mozillavr"
+            shadow
+            animation="property: position; to: 0 2.8 -4; dir: alternate; dur: 5000; loop: true; easing: easeInOutSine">
+        </a-text>
+
+        <!-- DINOSAURIOS (Placeholders - añadir modelos 3D aquí) -->
+
+        <!-- TRICERATOPS -->
+        <a-entity position="-15 0 -10" rotation="0 -90 0">
+            <a-gltf-model src="../assets/models/triceratops/triceratops.glb" scale="2 2 2" animation-mixer="" shadow=""
+                gltf-model="../assets/models/triceratops/triceratops.glb" position="-3.03919 0 1.00207"
+                rotation="0 140 0">
+            </a-gltf-model>
+        </a-entity>
+
+
+
+        <!-- T-REX NUEVO -->
+        <a-entity id="new-trex-container" position="05 0 7" rotation="0 0 0">
+            <a-gltf-model id="new-trex" src="../assets/models/trex/overpowered_tyrannosaurus_rex.glb" scale="7 7 7"
+                animation-mixer="clip: Idle" gltf-model="../assets/models/trex/overpowered_tyrannosaurus_rex.glb"
+                rotation="0 221.89 0" position="5.53919 0 -16.88188">
+            </a-gltf-model>
+        </a-entity>
+
+        <script>
+            // Sistema automático de animaciones para T-Rex
+            AFRAME.registerComponent('trex-auto-animations', {
+                init: function () {
+                    const trex = document.querySelector('#new-trex');
+                    trex.addEventListener('model-loaded', () => {
+                        const mixer = trex.components['animation-mixer'];
+                        if (!mixer || !mixer.mixer) return;
+
+                        const animations = [];
+                        mixer.mixer._actions.forEach((action) => {
+                            animations.push(action._clip.name);
+                        });
+                        console.log('🦖 Animaciones T-Rex:', animations);
+
+                        // Configurar ciclo: Principal (0) <-> Especial (2)
+                        if (animations.length > 0) {
+                            trex.setAttribute('animation-mixer', {
+                                clip: animations[0],
+                                loop: 'repeat'
+                            });
+
+                            const doSpecial = () => {
+                                // Elegir aleatoriamente una animación especial si hay más disponibles
+                                const specialIndex = animations.length > 2 ? 2 : (animations.length > 1 ? 1 : 0);
+                                trex.setAttribute('animation-mixer', {
+                                    clip: animations[specialIndex],
+                                    loop: 'once'
+                                });
+                                setTimeout(() => {
+                                    trex.setAttribute('animation-mixer', {
+                                        clip: animations[0],
+                                        loop: 'repeat'
+                                    });
+                                    setTimeout(doSpecial, 15000 + Math.random() * 10000);
+                                }, 5000);
+                            };
+                            setTimeout(doSpecial, 10000);
+                        }
+                    });
+                }
+            });
+        </script>
+
+        <!-- PTERANODON (Solo animación de vuelo, sin movimiento) -->
+        <a-entity position="0 15 -20" rotation="0 90 0">
+            <a-gltf-model src="../assets/models/pteranodon/dino_crisis_1_-_pteranodon.glb" scale="0.8 0.8 0.8"
+                animation-mixer="clip: 0; loop: repeat">
+            </a-gltf-model>
+        </a-entity>
+
+        <!-- VELOCIRAPTOR -->
+        <a-entity position="-8 0 5" rotation="0 180 0">
+            <a-gltf-model src="../assets/models/velociraptor/velociraptor.glb" scale="" shadow=""
+                animation-mixer="clip: Idle" gltf-model="../assets/models/velociraptor/velociraptor.glb"
+                position="-1.85129 0 -3.4227">
+            </a-gltf-model>
+        </a-entity>
+
+
+        <!-- Iluminación volcánica -->
+        <a-entity light="type: ambient; color: #FF8C42; intensity: 0.6"></a-entity>
+        <a-entity light="type: directional; color: #FFD700; intensity: 0.8" position="50 50 50" animation
+            shadow="cast: true"></a-entity>
+
+        <!-- Luces de lava (opcional) -->
+        <a-entity light="type: point; color: #FF4500; intensity: 1.5" position="-30 1 -30"></a-entity>
+        <a-entity light="type: point; color: #FF4500; intensity: 1.5" position="30 1 30"></a-entity>
+
+        <!-- VR RIG -->
+        <a-entity id="rig" movement-controls="speed: 0.3; controls: checkpoint, gamepad, trackpad, keyboard, touch">
+            <a-entity camera position="0 1.6 0" look-controls="pointerLockEnabled: false">
+                <a-entity cursor="fuse: false; rayOrigin: mouse;" position="0 0 -1"
+                    geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                    material="color: #FFD700; opacity: 0.8; side: double">
+                </a-entity>
+            </a-entity>
+
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable; far: 5"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable; far: 5"></a-entity>
+        </a-entity>
+
+    </a-scene>
+</body>
+
+</html>
