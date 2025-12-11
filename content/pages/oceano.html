@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mundo Océano</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+    </style>
+    <script>
+        // Sistema de Textura de Arena PROFESIONAL (PBR Real)
+        AFRAME.registerComponent('sand-texture', {
+            init: function () {
+                const el = this.el;
+
+                // Aplicar texturas PBR profesionales de Poly Haven con tinte amarillo
+                el.setAttribute('material', {
+                    src: '../assets/textures/sand/aerial_beach_01_diff_2k.jpg',
+                    normalMap: '../assets/textures/sand/aerial_beach_01_nor_gl_2k.jpg',
+                    displacementMap: '../assets/textures/sand/aerial_beach_01_disp_2k.jpg',
+                    roughnessMap: '../assets/textures/sand/aerial_beach_01_rough_2k.jpg',
+                    color: '#E8D4A0',  // Tinte amarillo arenoso
+                    repeat: '20 20',
+                    normalScale: { x: 2.5, y: 2.5 },
+                    displacementScale: 1.5,
+                    displacementBias: -0.75,
+                    roughness: 0.95,
+                    metalness: 0
+                });
+            }
+        });
+
+        // Componente de Cáusticos (reflejos del sol en el agua)
+        AFRAME.registerComponent('water-caustics', {
+            init: function () {
+                const el = this.el;
+
+                // Crear plano de luz proyectada
+                const causticLight = document.createElement('a-plane');
+                causticLight.setAttribute('width', '200');
+                causticLight.setAttribute('height', '200');
+                causticLight.setAttribute('rotation', '-90 0 0');
+                causticLight.setAttribute('position', '0 0.01 0');  // Justo sobre el suelo
+                causticLight.setAttribute('material', {
+                    color: '#FFFFFF',
+                    transparent: true,
+                    opacity: 0.15,
+                    blending: 'additive'
+                });
+
+                // Animación de movimiento de cáusticos (solo opacidad para rendimiento)
+                causticLight.setAttribute('animation__move', {
+                    property: 'material.opacity',
+                    from: 0.1,
+                    to: 0.2,
+                    dir: 'alternate',
+                    dur: 3000,
+                    loop: true,
+                    easing: 'easeInOutSine'
+                });
+
+                el.appendChild(causticLight);
+            }
+        });
+
+        // Generador de Entorno Marino REALISTA (formas orgánicas)
+        AFRAME.registerComponent('seabed-details', {
+            schema: {
+                clusters: { type: 'int', default: 15 },
+                radius: { type: 'number', default: 150 },
+                scattered: { type: 'int', default: 100 }  // Decoración dispersa
+            },
+            init: function () {
+                // Clusters forzados en zona visible (distancia media, no inmediata)
+                this.createReefCluster(0, -15);   // Frente a distancia media
+                this.createReefCluster(-12, -12); // Izquierda-frente
+                this.createReefCluster(12, -12);  // Derecha-frente
+
+                // Clusters principales aleatorios
+                for (let i = 0; i < this.data.clusters; i++) {
+                    const clusterX = (Math.random() - 0.5) * this.data.radius;
+                    const clusterZ = (Math.random() - 0.5) * this.data.radius;
+                    this.createReefCluster(clusterX, clusterZ);
+                }
+
+                // Decoración dispersa para llenar espacios vacíos
+                for (let i = 0; i < this.data.scattered; i++) {
+                    const x = (Math.random() - 0.5) * this.data.radius;
+                    const z = (Math.random() - 0.5) * this.data.radius;
+                    this.createScatteredDecoration(x, z);
+                }
+            },
+
+            createReefCluster: function (cx, cz) {
+                const entity = document.createElement('a-entity');
+                entity.setAttribute('position', { x: cx, y: 0, z: cz });
+
+                // 1. FORMACIÓN ROCOSA IRREGULAR (base realista) - REDUCIDA 50%
+                const numRocks = Math.floor(Math.random() * 3) + 2;
+                for (let r = 0; r < numRocks; r++) {
+                    const rock = document.createElement('a-entity');
+                    const rockSize = (Math.random() * 1.5 + 1) * 0.5;  // 50% más pequeño
+                    rock.setAttribute('geometry', {
+                        primitive: 'icosahedron',
+                        radius: rockSize,
+                        detail: 1
+                    });
+                    rock.setAttribute('material', {
+                        color: ['#5C4A42', '#6B5D54', '#4A3F3A'][Math.floor(Math.random() * 3)],
+                        flatShading: true,
+                        roughness: 1
+                    });
+                    // Deformar para aspecto irregular
+                    rock.setAttribute('scale', {
+                        x: 0.7 + Math.random() * 0.6,
+                        y: 0.4 + Math.random() * 0.3,
+                        z: 0.8 + Math.random() * 0.5
+                    });
+                    rock.setAttribute('position', {
+                        x: (Math.random() - 0.5) * 6,
+                        y: 0,  // SIEMPRE al nivel del suelo
+                        z: (Math.random() - 0.5) * 6
+                    });
+                    rock.setAttribute('rotation', {
+                        x: Math.random() * 30,
+                        y: Math.random() * 360,
+                        z: Math.random() * 30
+                    });
+                    entity.appendChild(rock);
+                }
+
+                // 2. VEGETACIÓN Y VIDA
+                const density = Math.floor(Math.random() * 15) + 15;
+                for (let j = 0; j < density; j++) {
+                    const item = document.createElement('a-entity');
+                    const lx = (Math.random() - 0.5) * 10;
+                    const lz = (Math.random() - 0.5) * 10;
+                    const type = Math.random();
+
+                    item.setAttribute('position', { x: lx, y: 0, z: lz });  // SIEMPRE al nivel del suelo
+
+                    if (type < 0.25) {
+                        // ALGAS 3D (modelo realista)
+                        const seaweed = document.createElement('a-entity');
+                        seaweed.setAttribute('gltf-model', '../assets/models/seaweed/sea_weed.glb');
+
+                        // Variación de escala para diversidad
+                        const scale = 0.8 + Math.random() * 0.6;  // 0.8-1.4
+                        seaweed.setAttribute('scale', { x: scale, y: scale, z: scale });
+
+                        // Rotación aleatoria
+                        seaweed.setAttribute('rotation', {
+                            x: 0,
+                            y: Math.random() * 360,
+                            z: 0
+                        });
+
+                        // Animación suave de meneo
+                        seaweed.setAttribute('animation', {
+                            property: 'rotation.z',
+                            from: -5,
+                            to: 5,
+                            dir: 'alternate',
+                            dur: 4000 + Math.random() * 2000,
+                            loop: true,
+                            easing: 'easeInOutSine'
+                        });
+
+                        item.appendChild(seaweed);
+
+                    } else if (type < 0.45) {
+                        // CORAL RAMIFICADO (estructura de árbol)
+                        const branches = Math.floor(Math.random() * 5) + 4;
+                        const coralColor = ['#FF4466', '#FF8844', '#FFAA33', '#FF6699'][Math.floor(Math.random() * 4)];
+                        for (let b = 0; b < branches; b++) {
+                            const branch = document.createElement('a-entity');
+                            const bh = (Math.random() * 2 + 1) * 0.5;  // 50% más pequeño
+                            branch.setAttribute('geometry', {
+                                primitive: 'cylinder',
+                                radius: (0.08 + Math.random() * 0.05) * 0.5,
+                                height: bh,
+                                segmentsRadial: 6
+                            });
+                            branch.setAttribute('material', { color: coralColor });
+                            const angle = (b / branches) * Math.PI * 2;
+                            branch.setAttribute('position', {
+                                x: Math.cos(angle) * 0.3,
+                                y: bh / 2,
+                                z: Math.sin(angle) * 0.3
+                            });
+                            branch.setAttribute('rotation', {
+                                x: Math.random() * 40 + 20,
+                                y: angle * (180 / Math.PI),
+                                z: 0
+                            });
+                            item.appendChild(branch);
+                        }
+
+                    } else if (type < 0.65) {
+                        // ANÉMONA (torus knot orgánico)
+                        item.setAttribute('geometry', {
+                            primitive: 'torusKnot',
+                            p: 2,
+                            q: 3,
+                            radius: (0.4 + Math.random() * 0.3) * 0.5,
+                            radiusTubular: 0.04,
+                            segmentsTubular: 8
+                        });
+                        item.setAttribute('material', {
+                            color: ['#FF3399', '#9933FF', '#33FFCC'][Math.floor(Math.random() * 3)],
+                            emissive: '#111111',
+                            emissiveIntensity: 0.3
+                        });
+                        item.setAttribute('scale', { x: 1, y: 0.5, z: 1 });
+                        // Pulsación suave
+                        item.setAttribute('animation', {
+                            property: 'scale',
+                            from: '1 0.5 1',
+                            to: '1.1 0.55 1.1',
+                            dir: 'alternate',
+                            dur: 2000 + Math.random() * 1000,
+                            loop: true,
+                            easing: 'easeInOutSine'
+                        });
+
+                    } else if (type < 0.85) {
+                        // CORAL CEREBRO (icosaedro deformado)
+                        item.setAttribute('geometry', {
+                            primitive: 'icosahedron',
+                            radius: (0.6 + Math.random() * 0.5) * 0.5,
+                            detail: 2
+                        });
+                        item.setAttribute('material', {
+                            color: ['#FFCC66', '#FF9966', '#FFAA88'][Math.floor(Math.random() * 3)],
+                            flatShading: false,
+                            roughness: 0.9
+                        });
+                        item.setAttribute('scale', {
+                            x: 1,
+                            y: 0.5 + Math.random() * 0.2,
+                            z: 1
+                        });
+
+                    } else {
+                        // GRUPO DE PERCEBES (hemisferios agrupados)
+                        const barnacles = Math.floor(Math.random() * 6) + 4;
+                        for (let bn = 0; bn < barnacles; bn++) {
+                            const barnacle = document.createElement('a-entity');
+                            barnacle.setAttribute('geometry', {
+                                primitive: 'cone',
+                                radiusBottom: (0.1 + Math.random() * 0.08) * 0.5,
+                                radiusTop: 0.01,
+                                height: (0.3 + Math.random() * 0.2) * 0.5,
+                                segmentsRadial: 6
+                            });
+                            barnacle.setAttribute('material', {
+                                color: '#D4C5B9',
+                                roughness: 1
+                            });
+                            const bAngle = (bn / barnacles) * Math.PI * 2;
+                            barnacle.setAttribute('position', {
+                                x: Math.cos(bAngle) * 0.2,
+                                y: 0,
+                                z: Math.sin(bAngle) * 0.2
+                            });
+                            barnacle.setAttribute('rotation', {
+                                x: Math.random() * 20,
+                                y: 0,
+                                z: Math.random() * 20
+                            });
+                            item.appendChild(barnacle);
+                        }
+                    }
+
+                    entity.appendChild(item);
+                }
+
+                this.el.appendChild(entity);
+            },
+
+            // Decoración dispersa individual
+            createScatteredDecoration: function (x, z) {
+                const item = document.createElement('a-entity');
+                item.setAttribute('position', { x: x, y: 0, z: z });  // SIEMPRE al nivel del suelo
+                const type = Math.random();
+
+                if (type < 0.4) {
+                    // Roca pequeña individual
+                    const size = (Math.random() * 0.8 + 0.3) * 0.5;  // 50% más pequeño
+                    item.setAttribute('geometry', {
+                        primitive: 'icosahedron',
+                        radius: size,
+                        detail: 1
+                    });
+                    item.setAttribute('material', {
+                        color: ['#5C4A42', '#6B5D54', '#4A3F3A'][Math.floor(Math.random() * 3)],
+                        flatShading: true,
+                        roughness: 1
+                    });
+                    item.setAttribute('scale', {
+                        x: 0.8 + Math.random() * 0.4,
+                        y: 0.5 + Math.random() * 0.3,
+                        z: 0.9 + Math.random() * 0.3
+                    });
+                    item.setAttribute('rotation', {
+                        x: Math.random() * 30,
+                        y: Math.random() * 360,
+                        z: Math.random() * 30
+                    });
+
+                } else if (type < 0.7) {
+                    // Alga 3D individual (más pequeña que en clusters)
+                    const seaweed = document.createElement('a-entity');
+                    seaweed.setAttribute('gltf-model', '../assets/models/seaweed/sea_weed.glb');
+
+                    // Escala más pequeña para variedad
+                    const scale = 0.4 + Math.random() * 0.4;  // 0.4-0.8 (más pequeño que clusters)
+                    seaweed.setAttribute('scale', { x: scale, y: scale, z: scale });
+
+                    seaweed.setAttribute('rotation', {
+                        x: 0,
+                        y: Math.random() * 360,
+                        z: 0
+                    });
+
+                    seaweed.setAttribute('animation', {
+                        property: 'rotation.z',
+                        from: -8,
+                        to: 8,
+                        dir: 'alternate',
+                        dur: 2500 + Math.random() * 1500,
+                        loop: true,
+                        easing: 'easeInOutSine'
+                    });
+
+                } else {
+                    // Coral pequeño individual
+                    item.setAttribute('geometry', {
+                        primitive: 'icosahedron',
+                        radius: (0.3 + Math.random() * 0.2) * 0.5,
+                        detail: 1
+                    });
+                    item.setAttribute('material', {
+                        color: ['#FF6699', '#FF8844', '#FFAA33'][Math.floor(Math.random() * 3)],
+                        flatShading: true
+                    });
+                    item.setAttribute('scale', {
+                        x: 1,
+                        y: 0.6,
+                        z: 1
+                    });
+                }
+
+                this.el.appendChild(item);
+            }
+        });
+
+        // Componente para sistema de partículas de burbujas simple
+        AFRAME.registerComponent('bubbles', {
+            schema: {
+                count: { type: 'int', default: 200 },
+                radius: { type: 'number', default: 20 }
+            },
+            init: function () {
+                for (let i = 0; i < this.data.count; i++) {
+                    const bubble = document.createElement('a-entity');
+                    // Posición aleatoria
+                    const x = (Math.random() - 0.5) * this.data.radius * 2;
+                    const y = Math.random() * 10;
+                    const z = (Math.random() - 0.5) * this.data.radius * 2;
+
+                    bubble.setAttribute('position', { x: x, y: y, z: z });
+
+                    // Apariencia de la burbuja
+                    bubble.setAttribute('geometry', {
+                        primitive: 'sphere',
+                        radius: Math.random() * 0.05 + 0.01
+                    });
+                    bubble.setAttribute('material', {
+                        color: '#FFFFFF',
+                        opacity: 0.3,
+                        transparent: true
+                    });
+
+                    // Animación de subir
+                    const duration = 5000 + Math.random() * 5000;
+                    bubble.setAttribute('animation', {
+                        property: 'position',
+                        to: `${x} ${y + 10} ${z}`,
+                        dur: duration,
+                        loop: true,
+                        easing: 'linear'
+                    });
+
+                    this.el.appendChild(bubble);
+                }
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <a-scene fog="type: linear; color: #102542; near: 0; far: 1000">
+
+        <a-sky src="../assets/images/360-forward-hold-1-2.jpg"></a-sky>
+
+        <!-- Suelo Marino (Arena Procedural) - Ligeramente bajo para compensar grosor -->
+        <a-plane sand-texture rotation="-90 0 0" width="200" height="200" position="0 -0.5 0"></a-plane>
+
+        <!-- Detalles del Fondo (RESTAURADO - 80 clusters + 300 dispersos con distribución por distancia) -->
+        <a-entity seabed-details="clusters: 80; radius: 250; scattered: 300" position="0 0 0"></a-entity>
+
+        <!-- Burbujas (Restaurado) -->
+        <a-entity bubbles="count: 300; radius: 30" position="0 0 0"></a-entity>
+
+        <!-- Texto de bienvenida con animación submarina -->
+        <a-text value="MUNDO OCEANO" align="center" position="0 3 -4" width="8" color="#FFFFFF" font="mozillavr" shadow
+            animation__float="property: position; to: 0 3.3 -4; dir: alternate; dur: 4000; loop: true; easing: easeInOutSine"
+            animation__sway="property: rotation; to: 0 0 2; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+        </a-text>
+
+        <a-text value="Animales Marinos" align="center" position="0 2.5 -4" width="4" color="#E0FFFF" font="mozillavr"
+            shadow
+            animation__float="property: position; to: 0 2.8 -4; dir: alternate; dur: 5000; loop: true; easing: easeInOutSine"
+            animation__sway="property: rotation; to: 0 0 -2; dir: alternate; dur: 3500; loop: true; easing: easeInOutSine">
+        </a-text>
+
+        <!-- Luces -->
+        <a-entity light="type: ambient; color: #BBB; intensity: 0.7"></a-entity>
+        <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-1 1 0"></a-entity>
+
+        <!-- VR RIG -->
+        <a-entity id="rig" movement-controls="speed: 0.2; controls: checkpoint, gamepad, trackpad, keyboard, touch">
+            <!-- Camera -->
+            <a-entity camera position="0 1.6 0" look-controls="pointerLockEnabled: false">
+                <a-entity cursor="fuse: false; rayOrigin: mouse;" position="0 0 -1"
+                    geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                    material="color: #00FF00; opacity: 0.8; side: double">
+                </a-entity>
+            </a-entity>
+
+            <!-- Controllers -->
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable; far: 5"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable; far: 5"></a-entity>
+        </a-entity>
+
+        <!-- TIBURON -->
+        <a-entity id="shark-container" position="-40 7 40"
+            animation="property: position; to: -40 8 40; dir: alternate; dur: 4000; loop: true; easing: easeInOutSine">
+            <a-gltf-model src="../assets/models/Shark/bruce_the_shark.glb" scale="5 5 5" rotation="0 135 0" shadow
+                animation-mixer>
+            </a-gltf-model>
+        </a-entity>
+
+        <!-- ORCA (Killer Whale)-->
+        <a-entity id="orca-container" position="-16.5 14.1 -40"
+            animation="property: position; to: -16.5 15.1 -40; dir: alternate; dur: 5000; loop: true; easing: easeInOutSine">
+            <a-gltf-model src="../assets/models/orca/orca.glb" scale="4 4 4" rotation="0 30 0" shadow animation-mixer>
+            </a-gltf-model>
+        </a-entity>
+
+        <!-- MANATI (Manatee) -->
+        <a-entity id="manatee-container" position="10 0 -10"
+            animation="property: position; to: 10 1 -10; dir: alternate; dur: 6000; loop: true; easing: easeInOutSine">
+            <a-gltf-model src="../assets/models/manatee/scene.gltf" scale="1.5 1.5 1.5" rotation="0 -110.59 0" shadow=""
+                gltf-model="../assets/models/manatee/scene.gltf" position="7.96043 11.28012 5.13404" animation-mixer>
+            </a-gltf-model>
+        </a-entity>
+
+        <!-- CANGREJO REAL (King Crab) -->
+        <a-entity id="kingcrab-container" position="-16 2 -10" rotation="0 100 0"
+            animation="property: position; to: -16 2.3 -10; dir: alternate; dur: 3500; loop: true; easing: easeInOutSine">
+            <a-gltf-model src="../assets/models/kingcrab/scene.gltf" scale="0.030 0.030 0.030" rotation="0 30 0" shadow
+                animation-mixer>
+            </a-gltf-model>
+        </a-entity>
+
+    </a-scene>
+</body>
+
+</html>
