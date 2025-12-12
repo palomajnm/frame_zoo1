@@ -62,6 +62,146 @@
                 });
             }
         });
+
+        // Sistema de Partículas de Ceniza Volcánica
+        AFRAME.registerComponent('volcanic-ash', {
+            schema: {
+                count: { type: 'int', default: 150 },
+                radius: { type: 'number', default: 50 }
+            },
+            init: function () {
+                for (let i = 0; i < this.data.count; i++) {
+                    const ash = document.createElement('a-sphere');
+
+                    // Posición aleatoria en el área
+                    const x = (Math.random() - 0.5) * this.data.radius * 2;
+                    const y = Math.random() * 20 + 2;
+                    const z = (Math.random() - 0.5) * this.data.radius * 2;
+
+                    ash.setAttribute('radius', Math.random() * 0.05 + 0.02);
+                    ash.setAttribute('position', `${x} ${y} ${z}`);
+                    ash.setAttribute('color', Math.random() > 0.5 ? '#888888' : '#666666');
+                    ash.setAttribute('material', 'opacity: 0.6; transparent: true');
+
+                    // Animación de caída lenta y flotante
+                    const duration = 15000 + Math.random() * 10000;
+                    const delay = Math.random() * 5000;
+                    ash.setAttribute('animation', `property: position; to: ${x + (Math.random() - 0.5) * 10} ${y - 25} ${z + (Math.random() - 0.5) * 10}; dur: ${duration}; loop: true; delay: ${delay}; easing: linear`);
+
+                    this.el.appendChild(ash);
+                }
+            }
+        });
+
+        // Detalles Volcánicos del Suelo
+        AFRAME.registerComponent('volcanic-details', {
+            schema: {
+                count: { type: 'int', default: 100 },
+                radius: { type: 'number', default: 80 }
+            },
+            init: function () {
+                for (let i = 0; i < this.data.count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * this.data.radius;
+                    const x = Math.cos(angle) * distance;
+                    const z = Math.sin(angle) * distance;
+
+                    const type = Math.random();
+
+                    if (type < 0.3) {
+                        // Cristales de azufre (amarillos)
+                        this.createSulfurCrystal(x, z);
+                    } else if (type < 0.5) {
+                        // Roca de obsidiana (negra brillante)
+                        this.createObsidian(x, z);
+                    } else if (type < 0.7) {
+                        // Grieta con lava
+                        this.createLavaCrack(x, z);
+                    } else {
+                        // Fumarola (vapor)
+                        this.createFumarole(x, z);
+                    }
+                }
+            },
+
+            createSulfurCrystal: function (x, z) {
+                const crystal = document.createElement('a-entity');
+                crystal.setAttribute('position', `${x} 0 ${z}`);
+
+                // Grupo de cristales
+                const count = Math.floor(Math.random() * 3) + 2;
+                for (let i = 0; i < count; i++) {
+                    const shard = document.createElement('a-box');
+                    const size = Math.random() * 0.3 + 0.1;
+                    shard.setAttribute('width', size * 0.3);
+                    shard.setAttribute('height', size);
+                    shard.setAttribute('depth', size * 0.3);
+                    shard.setAttribute('position', `${(Math.random() - 0.5) * 0.5} ${size / 2} ${(Math.random() - 0.5) * 0.5}`);
+                    shard.setAttribute('rotation', `${Math.random() * 30} ${Math.random() * 360} ${Math.random() * 30}`);
+                    shard.setAttribute('color', '#FFFF00');
+                    shard.setAttribute('material', 'metalness: 0.3; roughness: 0.4; emissive: #FFFF00; emissiveIntensity: 0.2');
+                    crystal.appendChild(shard);
+                }
+
+                this.el.appendChild(crystal);
+            },
+
+            createObsidian: function (x, z) {
+                const obsidian = document.createElement('a-dodecahedron');
+                const size = Math.random() * 0.6 + 0.3;
+                obsidian.setAttribute('radius', size);
+                obsidian.setAttribute('position', `${x} ${size * 0.5} ${z}`);
+                obsidian.setAttribute('rotation', `${Math.random() * 360} ${Math.random() * 360} ${Math.random() * 360}`);
+                obsidian.setAttribute('color', '#0A0A0A');
+                obsidian.setAttribute('material', 'metalness: 0.9; roughness: 0.1');
+                obsidian.setAttribute('shadow', 'cast: true');
+
+                this.el.appendChild(obsidian);
+            },
+
+            createLavaCrack: function (x, z) {
+                const crack = document.createElement('a-plane');
+                const length = Math.random() * 2 + 1;
+                crack.setAttribute('width', 0.2);
+                crack.setAttribute('height', length);
+                crack.setAttribute('position', `${x} 0.02 ${z}`);
+                crack.setAttribute('rotation', '-90 0 ' + (Math.random() * 360));
+                crack.setAttribute('color', '#FF4500');
+                crack.setAttribute('material', 'emissive: #FF4500; emissiveIntensity: 0.8');
+                crack.setAttribute('animation', `property: material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: ${2000 + Math.random() * 1000}; loop: true`);
+
+                this.el.appendChild(crack);
+            },
+
+            createFumarole: function (x, z) {
+                const fumarole = document.createElement('a-entity');
+                fumarole.setAttribute('position', `${x} 0 ${z}`);
+
+                // Base oscura
+                const base = document.createElement('a-cone');
+                base.setAttribute('radius-bottom', '0.3');
+                base.setAttribute('radius-top', '0.1');
+                base.setAttribute('height', '0.2');
+                base.setAttribute('position', '0 0.1 0');
+                base.setAttribute('color', '#2A2A2A');
+                fumarole.appendChild(base);
+
+                // Vapor (3 esferas subiendo)
+                for (let i = 0; i < 3; i++) {
+                    const steam = document.createElement('a-sphere');
+                    steam.setAttribute('radius', Math.random() * 0.15 + 0.1);
+                    steam.setAttribute('position', `0 ${0.3 + i * 0.5} 0`);
+                    steam.setAttribute('color', '#CCCCCC');
+                    steam.setAttribute('material', 'opacity: 0.4; transparent: true');
+                    steam.setAttribute('animation', `property: position; to: 0 ${3 + i * 0.5} 0; dur: ${3000 + i * 500}; loop: true; easing: easeOutQuad`);
+                    steam.setAttribute('animation__fade', `property: material.opacity; to: 0; dur: ${3000 + i * 500}; loop: true; easing: easeInQuad`);
+                    steam.setAttribute('animation__scale', `property: scale; to: 1.5 1.5 1.5; dur: ${3000 + i * 500}; loop: true; easing: linear; delay: ${i * 300}`);
+                    fumarole.appendChild(steam);
+                }
+
+                this.el.appendChild(fumarole);
+            }
+        });
     </script>
 </head>
 
@@ -71,6 +211,14 @@
         <!-- Cielo volcánico -->
         <a-sky color="#FF8C42"></a-sky>
 
+        <!-- 🌋 SONIDO AMBIENTE VOLCÁNICO -->
+        <a-entity sound="src: ../assets/sounds/mixkit-bubbling-volcano-lava-flow-2444.wav; 
+                   autoplay: true;
+                   loop: true; 
+                   volume: 0.3;
+                   positional: false" position="0 0 0">
+        </a-entity>
+
         <!-- Suelo volcánico -->
         <a-plane position="0 0 0" rotation="-90 0 0" width="500" height="500" color="#5C4033" material="roughness: 0.9"
             shadow="receive: true">
@@ -78,6 +226,109 @@
 
         <!-- Rocas volcánicas (sin vegetación) -->
         <a-entity volcanic-rocks="count: 80; radius: 200" position="0 0 0"></a-entity>
+
+        <!-- 🌫️ PARTÍCULAS DE CENIZA VOLCÁNICA (Ambiente) -->
+        <a-entity volcanic-ash="count: 400; radius: 70" position="0 0 0"></a-entity>
+
+        <!-- 💎 DETALLES VOLCÁNICOS DEL SUELO (Cristales, Obsidiana, Grietas, Fumarolas) -->
+        <a-entity volcanic-details="count: 120; radius: 80" position="0 0 0"></a-entity>
+
+        <!-- 🏔️ CORDILLERA MEJORADA - Formaciones irregulares -->
+        <!-- Norte - Formación irregular -->
+        <a-entity position="0 0 -120">
+            <a-cone radius-bottom="40" radius-top="15" height="50" position="0 25 0" color="#3A3A3A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="28" radius-top="8" height="35" position="-8 50 5" color="#2F2F2F"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="20" radius-top="4" height="25" position="6 65 -3" color="#4A4A4A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+
+        <!-- Noreste - Picos gemelos -->
+        <a-entity position="85 0 -85">
+            <a-cone radius-bottom="35" radius-top="12" height="48" position="-5 24 0" color="#4A4A4A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="32" radius-top="10" height="45" position="5 22.5 0" color="#3A3A3A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="18" radius-top="3" height="28" position="-5 60 0" color="#2F2F2F"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+
+        <!-- Este - Masiva -->
+        <a-entity position="120 0 0">
+            <a-cone radius-bottom="45" radius-top="18" height="55" position="0 27.5 0" color="#2F2F2F"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="30" radius-top="12" height="40" position="-6 60 4" color="#1A1A1A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="22" radius-top="6" height="30" position="4 75 -3" color="#3A3A3A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+
+        <!-- Sureste - Escalonada -->
+        <a-entity position="85 0 85">
+            <a-cone radius-bottom="38" radius-top="14" height="52" position="0 26 0" color="#3A3A3A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="25" radius-top="9" height="36" position="7 55 -5" color="#2F2F2F"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="18" radius-top="5" height="26" position="-4 70 3" color="#4A4A4A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+
+        <!-- Sur - Triple pico -->
+        <a-entity position="0 0 120">
+            <a-cone radius-bottom="42" radius-top="16" height="54" position="-8 27 0" color="#4A4A4A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="40" radius-top="15" height="52" position="8 26 0" color="#3A3A3A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="24" radius-top="7" height="32" position="-8 65 0" color="#2F2F2F"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+
+        <!-- Suroeste - Asimétrica -->
+        <a-entity position="-85 0 85">
+            <a-cone radius-bottom="36" radius-top="13" height="50" position="0 25 0" color="#2F2F2F"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="26" radius-top="8" height="34" position="-9 58 6" color="#1A1A1A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="19" radius-top="4" height="27" position="5 68 -4" color="#3A3A3A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+
+        <!-- Oeste - Compacta -->
+        <a-entity position="-120 0 0">
+            <a-cone radius-bottom="32" radius-top="11" height="46" position="0 23 0" color="#3A3A3A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="20" radius-top="6" height="28" position="4 55 -3" color="#2F2F2F"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+
+        <!-- Noroeste - Alta -->
+        <a-entity position="-85 0 -85">
+            <a-cone radius-bottom="34" radius-top="12" height="58" position="0 29 0" color="#4A4A4A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="22" radius-top="7" height="38" position="-5 70 3" color="#3A3A3A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+
+        <!-- Intermedias -->
+        <a-entity position="45 0 -100">
+            <a-cone radius-bottom="28" radius-top="10" height="42" position="0 21 0" color="#3A3A3A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+            <a-cone radius-bottom="17" radius-top="4" height="24" position="-4 52 3" color="#2F2F2F"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+        <a-entity position="100 0 45">
+            <a-cone radius-bottom="30" radius-top="11" height="44" position="0 22 0" color="#2F2F2F"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+        <a-entity position="-45 0 100">
+            <a-cone radius-bottom="29" radius-top="10.5" height="43" position="0 21.5 0" color="#4A4A4A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
+        <a-entity position="-100 0 -45">
+            <a-cone radius-bottom="27" radius-top="9.5" height="41" position="0 20.5 0" color="#3A3A3A"
+                material="roughness: 1" shadow="cast: true"></a-cone>
+        </a-entity>
 
         <!-- VOLCÁN MEJORADO -->
         <a-entity position="-50 0 -80">
@@ -147,41 +398,220 @@
             </a-entity>
         </a-entity>
 
-        <!-- RÍO DE LAVA MEJORADO (Más realista) -->
-        <a-entity position="0 0.05 0">
-            <!-- Sección 1: Desde el volcán -->
-            <a-box width="6" height="0.2" depth="40" position="-30 0 -60" rotation="0 -15 0" color="#FF4500"
-                material="emissive: #FF4500; emissiveIntensity: 0.8"
-                animation="property: components.material.material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: 1800; loop: true"
+        <!-- 🌋 RÍO DE LAVA - Fluye DESDE el volcán hacia afuera -->
+        <a-entity id="lava-river" position="0 0.1 0">
+            <!-- Sección 1: Sale del volcán (base del volcán en -50, 0, -80) -->
+            <a-box width="4" height="0.3" depth="20" position="-50 0 -65" rotation="0 0 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.9"
+                animation="property: material.emissiveIntensity; from: 0.7; to: 1.1; dir: alternate; dur: 1500; loop: true"
                 shadow="cast: true">
             </a-box>
 
-            <!-- Sección 2: Curva -->
-            <a-box width="7" height="0.2" depth="50" position="-10 0 -35" rotation="0 30 0" color="#FF4500"
-                material="emissive: #FF4500; emissiveIntensity: 0.8"
-                animation="property: components.material.material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: 1800; loop: true; delay: 600"
+            <!-- Sección 2: Continúa recto -->
+            <a-box width="5" height="0.3" depth="25" position="-50 0 -45" rotation="0 0 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.9"
+                animation="property: material.emissiveIntensity; from: 0.7; to: 1.1; dir: alternate; dur: 1500; loop: true; delay: 200"
                 shadow="cast: true">
             </a-box>
 
-            <!-- Sección 3: Recta principal -->
-            <a-box width="8" height="0.2" depth="60" position="15 0 -5" rotation="0 10 0" color="#FF4500"
-                material="emissive: #FF4500; emissiveIntensity: 0.8"
-                animation="property: components.material.material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: 1800; loop: true; delay: 1200"
+            <!-- Sección 3: Sigue recto -->
+            <a-box width="6" height="0.3" depth="30" position="-50 0 -17" rotation="0 0 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.9"
+                animation="property: material.emissiveIntensity; from: 0.7; to: 1.1; dir: alternate; dur: 1500; loop: true; delay: 400"
                 shadow="cast: true">
             </a-box>
 
-            <!-- Sección 4: Final más estrecha -->
-            <a-box width="5" height="0.2" depth="40" position="25 0 30" rotation="0 -5 0" color="#FF4500"
-                material="emissive: #FF4500; emissiveIntensity: 0.8"
-                animation="property: components.material.material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: 1800; loop: true; delay: 300"
+            <!-- Sección 4: Se ensancha -->
+            <a-box width="7" height="0.3" depth="35" position="-50 0 15" rotation="0 0 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.9"
+                animation="property: material.emissiveIntensity; from: 0.7; to: 1.1; dir: alternate; dur: 1500; loop: true; delay: 600"
                 shadow="cast: true">
             </a-box>
 
-            <!-- Luces del río (más distribuidas) -->
-            <a-entity light="type: point; color: #FF6600; intensity: 1.2; distance: 15" position="-30 1 -60"></a-entity>
-            <a-entity light="type: point; color: #FF6600; intensity: 1.2; distance: 15" position="-10 1 -35"></a-entity>
-            <a-entity light="type: point; color: #FF6600; intensity: 1.2; distance: 15" position="15 1 -5"></a-entity>
-            <a-entity light="type: point; color: #FF6600; intensity: 1.2; distance: 15" position="25 1 30"></a-entity>
+            <!-- Sección 5: Final -->
+            <a-box width="6" height="0.3" depth="25" position="-50 0 42" rotation="0 0 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.8"
+                animation="property: material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: 1500; loop: true; delay: 800"
+                shadow="cast: true">
+            </a-box>
+
+
+
+            <!-- Luces del río -->
+            <a-entity light="type: point; color: #FF6600; intensity: 1.5; distance: 20" position="-50 1 -70"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.5; distance: 20" position="-50 1 -45"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.5; distance: 20" position="-50 1 -17"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.5; distance: 20" position="-50 1 15"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.5; distance: 20" position="-50 1 42"></a-entity>
+
+            <!-- 🔥 PARTÍCULAS DE LAVA - Río 1 (20 partículas) -->
+            <a-entity position="-50 0.4 -70"><a-sphere radius="0.1" color="#FF4500"
+                    material="emissive: #FF4500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2 112; dur: 8000; loop: true; easing: linear"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -68"><a-sphere radius="0.09" color="#FF6600"
+                    material="emissive: #FF6600; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.8 110; dur: 7500; loop: true; easing: linear; delay: 400"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -66"><a-sphere radius="0.11" color="#FF2200"
+                    material="emissive: #FF2200; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.2 108; dur: 8200; loop: true; easing: linear; delay: 800"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -64"><a-sphere radius="0.08" color="#FF8800"
+                    material="emissive: #FF8800; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.7 106; dur: 7800; loop: true; easing: linear; delay: 1200"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -62"><a-sphere radius="0.1" color="#FF5500"
+                    material="emissive: #FF5500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.1 104; dur: 8100; loop: true; easing: linear; delay: 1600"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -60"><a-sphere radius="0.12" color="#FF4500"
+                    material="emissive: #FF4500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.4 102; dur: 8400; loop: true; easing: linear; delay: 2000"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -58"><a-sphere radius="0.09" color="#FF6600"
+                    material="emissive: #FF6600; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.9 100; dur: 7600; loop: true; easing: linear; delay: 2400"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -56"><a-sphere radius="0.1" color="#FF2200"
+                    material="emissive: #FF2200; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2 98; dur: 8000; loop: true; easing: linear; delay: 2800"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -54"><a-sphere radius="0.08" color="#FF8800"
+                    material="emissive: #FF8800; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.8 96; dur: 7700; loop: true; easing: linear; delay: 3200"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -52"><a-sphere radius="0.11" color="#FF5500"
+                    material="emissive: #FF5500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.2 94; dur: 8300; loop: true; easing: linear; delay: 3600"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -50"><a-sphere radius="0.1" color="#FF4500"
+                    material="emissive: #FF4500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.1 92; dur: 8100; loop: true; easing: linear; delay: 4000"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -48"><a-sphere radius="0.09" color="#FF6600"
+                    material="emissive: #FF6600; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.9 90; dur: 7900; loop: true; easing: linear; delay: 4400"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -46"><a-sphere radius="0.12" color="#FF2200"
+                    material="emissive: #FF2200; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.3 88; dur: 8500; loop: true; easing: linear; delay: 4800"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -44"><a-sphere radius="0.08" color="#FF8800"
+                    material="emissive: #FF8800; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.7 86; dur: 7400; loop: true; easing: linear; delay: 5200"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -42"><a-sphere radius="0.1" color="#FF5500"
+                    material="emissive: #FF5500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2 84; dur: 8000; loop: true; easing: linear; delay: 5600"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -40"><a-sphere radius="0.11" color="#FF4500"
+                    material="emissive: #FF4500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.2 82; dur: 8200; loop: true; easing: linear; delay: 6000"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -38"><a-sphere radius="0.09" color="#FF6600"
+                    material="emissive: #FF6600; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.8 80; dur: 7600; loop: true; easing: linear; delay: 6400"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -36"><a-sphere radius="0.1" color="#FF2200"
+                    material="emissive: #FF2200; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.1 78; dur: 8100; loop: true; easing: linear; delay: 6800"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -34"><a-sphere radius="0.12" color="#FF8800"
+                    material="emissive: #FF8800; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.4 76; dur: 8400; loop: true; easing: linear; delay: 7200"></a-sphere></a-entity>
+            <a-entity position="-50 0.4 -32"><a-sphere radius="0.08" color="#FF5500"
+                    material="emissive: #FF5500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.7 74; dur: 7500; loop: true; easing: linear; delay: 7600"></a-sphere></a-entity>
+        </a-entity>
+
+        <!-- 🌋 SEGUNDO RÍO DE LAVA RECTO -->
+        <a-entity id="lava-river-2" position="0 0.1 0">
+            <!-- Sección 1 -->
+            <a-box width="4" height="0.3" depth="20" position="30 0 -65" rotation="0 0 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.9"
+                animation="property: material.emissiveIntensity; from: 0.7; to: 1.1; dir: alternate; dur: 1600; loop: true"
+                shadow="cast: true">
+            </a-box>
+
+            <!-- Sección 2 -->
+            <a-box width="5" height="0.3" depth="25" position="30 0 -45" rotation="0 0 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.9"
+                animation="property: material.emissiveIntensity; from: 0.7; to: 1.1; dir: alternate; dur: 1600; loop: true; delay: 300"
+                shadow="cast: true">
+            </a-box>
+
+            <!-- Sección 3 -->
+            <a-box width="6" height="0.3" depth="30" position="30 0 -17" rotation="0 0 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.9"
+                animation="property: material.emissiveIntensity; from: 0.7; to: 1.1; dir: alternate; dur: 1600; loop: true; delay: 500"
+                shadow="cast: true">
+            </a-box>
+
+            <!-- Sección 4 -->
+            <a-box width="7" height="0.3" depth="35" position="30 0 15" rotation="0 0 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.9"
+                animation="property: material.emissiveIntensity; from: 0.7; to: 1.1; dir: alternate; dur: 1600; loop: true; delay: 700"
+                shadow="cast: true">
+            </a-box>
+
+            <!-- Sección 5 -->
+            <a-box width="6" height="0.3" depth="25" position="30 0 42" rotation="0 0 0" color="#FF4500"
+                material="emissive: #FF4500; emissiveIntensity: 0.8"
+                animation="property: material.emissiveIntensity; from: 0.6; to: 1; dir: alternate; dur: 1600; loop: true; delay: 900"
+                shadow="cast: true">
+            </a-box>
+
+            <!-- Luces del río 2 -->
+            <a-entity light="type: point; color: #FF6600; intensity: 1.5; distance: 20" position="30 1 -70"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.5; distance: 20" position="30 1 -45"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.5; distance: 20" position="30 1 -17"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.5; distance: 20" position="30 1 15"></a-entity>
+            <a-entity light="type: point; color: #FF6600; intensity: 1.5; distance: 20" position="30 1 42"></a-entity>
+
+            <!-- 🔥 PARTÍCULAS DE LAVA - Río 2 (20 partículas) -->
+            <a-entity position="30 0.4 -70"><a-sphere radius="0.11" color="#FF4500"
+                    material="emissive: #FF4500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.2 112; dur: 8500; loop: true; easing: linear; delay: 500"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -68"><a-sphere radius="0.09" color="#FF6600"
+                    material="emissive: #FF6600; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.9 110; dur: 7600; loop: true; easing: linear; delay: 900"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -66"><a-sphere radius="0.1" color="#FF2200"
+                    material="emissive: #FF2200; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.1 108; dur: 8100; loop: true; easing: linear; delay: 1300"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -64"><a-sphere radius="0.12" color="#FF8800"
+                    material="emissive: #FF8800; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.3 106; dur: 8300; loop: true; easing: linear; delay: 1700"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -62"><a-sphere radius="0.08" color="#FF5500"
+                    material="emissive: #FF5500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.8 104; dur: 7700; loop: true; easing: linear; delay: 2100"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -60"><a-sphere radius="0.1" color="#FF4500"
+                    material="emissive: #FF4500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2 102; dur: 8000; loop: true; easing: linear; delay: 2500"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -58"><a-sphere radius="0.11" color="#FF6600"
+                    material="emissive: #FF6600; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.2 100; dur: 8200; loop: true; easing: linear; delay: 2900"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -56"><a-sphere radius="0.09" color="#FF2200"
+                    material="emissive: #FF2200; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.9 98; dur: 7900; loop: true; easing: linear; delay: 3300"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -54"><a-sphere radius="0.12" color="#FF8800"
+                    material="emissive: #FF8800; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.4 96; dur: 8400; loop: true; easing: linear; delay: 3700"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -52"><a-sphere radius="0.08" color="#FF5500"
+                    material="emissive: #FF5500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.7 94; dur: 7500; loop: true; easing: linear; delay: 4100"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -50"><a-sphere radius="0.1" color="#FF4500"
+                    material="emissive: #FF4500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.1 92; dur: 8100; loop: true; easing: linear; delay: 4500"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -48"><a-sphere radius="0.11" color="#FF6600"
+                    material="emissive: #FF6600; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.2 90; dur: 8200; loop: true; easing: linear; delay: 4900"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -46"><a-sphere radius="0.09" color="#FF2200"
+                    material="emissive: #FF2200; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.8 88; dur: 7800; loop: true; easing: linear; delay: 5300"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -44"><a-sphere radius="0.1" color="#FF8800"
+                    material="emissive: #FF8800; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2 86; dur: 8000; loop: true; easing: linear; delay: 5700"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -42"><a-sphere radius="0.12" color="#FF5500"
+                    material="emissive: #FF5500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.3 84; dur: 8300; loop: true; easing: linear; delay: 6100"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -40"><a-sphere radius="0.08" color="#FF4500"
+                    material="emissive: #FF4500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.7 82; dur: 7600; loop: true; easing: linear; delay: 6500"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -38"><a-sphere radius="0.1" color="#FF6600"
+                    material="emissive: #FF6600; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.1 80; dur: 8100; loop: true; easing: linear; delay: 6900"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -36"><a-sphere radius="0.11" color="#FF2200"
+                    material="emissive: #FF2200; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2.2 78; dur: 8200; loop: true; easing: linear; delay: 7300"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -34"><a-sphere radius="0.09" color="#FF8800"
+                    material="emissive: #FF8800; emissiveIntensity: 2"
+                    animation="property: position; to: 0 1.9 76; dur: 7900; loop: true; easing: linear; delay: 7700"></a-sphere></a-entity>
+            <a-entity position="30 0.4 -32"><a-sphere radius="0.1" color="#FF5500"
+                    material="emissive: #FF5500; emissiveIntensity: 2"
+                    animation="property: position; to: 0 2 74; dur: 8000; loop: true; easing: linear; delay: 8100"></a-sphere></a-entity>
         </a-entity>
 
         <!-- Texto de bienvenida -->
@@ -214,6 +644,7 @@
                 rotation="0 221.89 0" position="5.53919 0 -16.88188">
             </a-gltf-model>
         </a-entity>
+
 
         <script>
             // Sistema automático de animaciones para T-Rex
@@ -261,8 +692,7 @@
 
         <!-- PTERANODON (Solo animación de vuelo, sin movimiento) -->
         <a-entity position="0 15 -20" rotation="0 90 0">
-            <a-gltf-model src="../assets/models/pteranodon/dino_crisis_1_-_pteranodon.glb" scale="0.8 0.8 0.8"
-                animation-mixer="clip: 0; loop: repeat">
+            <a-gltf-model src="../assets/models/pteranodon/dino_crisis_1_-_pteranodon.glb" scale="0.8 0.8 0.8">
             </a-gltf-model>
         </a-entity>
 
@@ -273,7 +703,6 @@
                 position="-1.85129 0 -3.4227">
             </a-gltf-model>
         </a-entity>
-
 
         <!-- Iluminación volcánica -->
         <a-entity light="type: ambient; color: #FF8C42; intensity: 0.6"></a-entity>
@@ -296,6 +725,48 @@
             <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable; far: 5"></a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable; far: 5"></a-entity>
         </a-entity>
+
+        <!-- 🏠 PORTAL AL INDEX - Panel estilo casa (DETRÁS DEL JUGADOR) -->
+        <a-entity id="home-portal" position="0 2.5 8" rotation="0 180 0" class="clickable">
+            <!-- Marco del portal -->
+            <a-box width="2.5" height="2.5" depth="0.2" color="#34495E" material="metalness: 0.7; roughness: 0.4"
+                animation__float="property: position; to: 0 0.2 0; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+            </a-box>
+
+            <!-- Fondo -->
+            <a-plane width="2.2" height="2.2" position="0 0 0.11" color="#1A1A2E" material="opacity: 0.9">
+            </a-plane>
+
+            <!-- Icono de casa grande -->
+            <a-text value="🏠" align="center" position="0 0.4 0.12" width="10" color="#FFD700"
+                animation="property: scale; from: 1 1 1; to: 1.15 1.15 1.15; dir: alternate; dur: 1500; loop: true; easing: easeInOutSine">
+            </a-text>
+
+            <!-- Título -->
+            <a-text value="VOLVER AL ZOO" align="center" position="0 -0.2 0.12" width="4" color="#FFFFFF"
+                font="mozillavr">
+            </a-text>
+
+            <!-- Botón -->
+            <a-box width="1.8" height="0.4" depth="0.15" position="0 -0.7 0.15" color="#FFD700"
+                material="emissive: #FFD700; emissiveIntensity: 0.3; metalness: 0.5"
+                animation__glow="property: material.emissiveIntensity; from: 0.3; to: 0.6; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine">
+                <a-text value="CLICK PARA IR" align="center" position="0 0 0.08" width="3" color="#000000"
+                    font="mozillavr">
+                </a-text>
+            </a-box>
+        </a-entity>
+
+        <script>
+            // VR click handler para el portal home
+            document.querySelector('a-scene').addEventListener('loaded', function () {
+                const homePortal = document.querySelector('#home-portal');
+                if (homePortal) {
+                    homePortal.addEventListener('click', () => window.location.href = '../../index.html');
+                    homePortal.addEventListener('mousedown', () => window.location.href = '../../index.html');
+                }
+            });
+        </script>
 
     </a-scene>
 </body>

@@ -410,6 +410,14 @@
 
         <a-sky src="../assets/images/360-forward-hold-1-2.jpg"></a-sky>
 
+        <!-- 🌊 SONIDO AMBIENTE OCEÁNICO -->
+        <a-entity sound="src: ../assets/sounds/underwater-ambience-376890.mp3; 
+                   autoplay: true;
+                   loop: true; 
+                   volume: 0.3;
+                   positional: false" position="0 0 0">
+        </a-entity>
+
         <!-- Suelo Marino (Arena Procedural) - Ligeramente bajo para compensar grosor -->
         <a-plane sand-texture rotation="-90 0 0" width="200" height="200" position="0 -0.5 0"></a-plane>
 
@@ -479,6 +487,118 @@
                 animation-mixer>
             </a-gltf-model>
         </a-entity>
+
+        <!-- 📸 PANEL SAFARI VR - Estilo cámara fotográfica -->
+        <a-entity id="safari-panel" position="12 2.5 -6" rotation="0 -30 0" class="clickable">
+            <!-- Marco del panel (como una cámara vintage) -->
+            <a-box width="3" height="2" depth="0.2" color="#2C3E50" material="metalness: 0.8; roughness: 0.3"
+                animation__float="property: position; to: 0 0.2 0; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+            </a-box>
+
+            <!-- Pantalla/Preview (rectángulo negro como visor) -->
+            <a-plane width="2.6" height="1.4" position="0 0 0.11" color="#000000" material="opacity: 0.9">
+            </a-plane>
+
+            <!-- Icono de cámara grande -->
+            <a-text value="📸" align="center" position="0 0.4 0.12" width="8" color="#00D4FF"
+                animation="property: scale; from: 1 1 1; to: 1.1 1.1 1.1; dir: alternate; dur: 1500; loop: true; easing: easeInOutSine">
+            </a-text>
+
+            <!-- Título principal -->
+            <a-text value="SAFARI FOTOGRAFICO" align="center" position="0 -0.1 0.12" width="4" color="#FFFFFF"
+                font="mozillavr">
+            </a-text>
+
+            <!-- Subtítulo -->
+            <a-text value="Video 360° Tiburones" align="center" position="0 -0.35 0.12" width="3" color="#00D4FF">
+            </a-text>
+
+            <!-- Botón "ENTRAR" -->
+            <a-box width="1.5" height="0.4" depth="0.15" position="0 -0.7 0.15" color="#00D4FF"
+                material="emissive: #00D4FF; emissiveIntensity: 0.3"
+                animation__glow="property: material.emissiveIntensity; from: 0.3; to: 0.6; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine">
+                <a-text value="CLICK PARA ENTRAR" align="center" position="0 0 0.08" width="3" color="#000000"
+                    font="mozillavr">
+                </a-text>
+            </a-box>
+
+            <!-- Detalles decorativos (lente de cámara) -->
+            <a-ring radius-inner="0.15" radius-outer="0.25" position="-1 0.6 0.25" color="#FFD700"
+                animation="property: rotation; to: 0 0 360; dur: 4000; loop: true; easing: linear">
+            </a-ring>
+            <a-circle radius="0.12" position="-1 0.6 0.27" color="#333333"></a-circle>
+        </a-entity>
+
+        <script>
+            // Esperar a que la escena cargue antes de añadir los click handlers
+            document.querySelector('a-scene').addEventListener('loaded', function () {
+                // Click handler para el panel Safari VR
+                const safariPanel = document.querySelector('#safari-panel');
+                if (safariPanel) {
+                    safariPanel.addEventListener('click', function () {
+                        window.location.href = 'safari-vr.html';
+                    });
+                }
+
+                // Click handler para volver al index
+                const homePortal = document.querySelector('#home-portal');
+                if (homePortal) {
+                    homePortal.addEventListener('click', function () {
+                        window.location.href = '../../index.html';
+                    });
+                }
+            });
+        </script>
+
+        <!-- 🏠 PORTAL AL INDEX - Panel estilo casa (DETRÁS DEL JUGADOR) -->
+        <a-entity id="home-portal" position="0 2.5 8" rotation="0 180 0" class="clickable">
+            <!-- Marco del portal -->
+            <a-box width="2.5" height="2.5" depth="0.2" color="#34495E" material="metalness: 0.7; roughness: 0.4"
+                animation__float="property: position; to: 0 0.2 0; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+            </a-box>
+
+            <!-- Fondo -->
+            <a-plane width="2.2" height="2.2" position="0 0 0.11" color="#1A1A2E" material="opacity: 0.9">
+            </a-plane>
+
+            <!-- Icono de casa grande -->
+            <a-text value="🏠" align="center" position="0 0.4 0.12" width="10" color="#FFD700"
+                animation="property: scale; from: 1 1 1; to: 1.15 1.15 1.15; dir: alternate; dur: 1500; loop: true; easing: easeInOutSine">
+            </a-text>
+
+            <!-- Título -->
+            <a-text value="VOLVER AL ZOO" align="center" position="0 -0.2 0.12" width="4" color="#FFFFFF"
+                font="mozillavr">
+            </a-text>
+
+            <!-- Botón -->
+            <a-box width="1.8" height="0.4" depth="0.15" position="0 -0.7 0.15" color="#FFD700"
+                material="emissive: #FFD700; emissiveIntensity: 0.3"
+                animation__glow="property: material.emissiveIntensity; from: 0.3; to: 0.6; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine">
+                <a-text value="CLICK PARA IR" align="center" position="0 0 0.08" width="3" color="#000000"
+                    font="mozillavr">
+                </a-text>
+            </a-box>
+        </a-entity>
+
+        <script>
+            // Click handlers para VR y mouse
+            document.querySelector('a-scene').addEventListener('loaded', function () {
+                // Safari VR Panel
+                const safariPanel = document.querySelector('#safari-panel');
+                if (safariPanel) {
+                    safariPanel.addEventListener('click', () => window.location.href = 'safari-vr.html');
+                    safariPanel.addEventListener('mousedown', () => window.location.href = 'safari-vr.html');
+                }
+
+                // Home Portal
+                const homePortal = document.querySelector('#home-portal');
+                if (homePortal) {
+                    homePortal.addEventListener('click', () => window.location.href = '../../index.html');
+                    homePortal.addEventListener('mousedown', () => window.location.href = '../../index.html');
+                }
+            });
+        </script>
 
     </a-scene>
 </body>

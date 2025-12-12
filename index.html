@@ -150,8 +150,9 @@
             <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 0.2" color="#654321" shadow="cast: true">
             </a-cylinder>
         </a-entity>
+
         <a-entity id="avion" position="0 0.85 -2">
-            <a-gltf-model src="../content/assets/models/avion/plane.glb" scale="0.4 0.4 0.4" rotation="0 35 0" shadow
+            <a-gltf-model src="./content/assets/models/avion/plane.glb" scale="0.4 0.4 0.4" rotation="0 35 0" shadow
                 animation-mixer>
             </a-gltf-model>
         </a-entity>
@@ -267,6 +268,32 @@
             <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable; far: 5"></a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable; far: 5"></a-entity>
         </a-entity>
+
+        <script>
+            // VR click handlers para los pins del mapa
+            document.querySelector('a-scene').addEventListener('loaded', function () {
+                // Pin Sabana
+                const pinSabana = document.querySelector('#pin-sabana');
+                if (pinSabana) {
+                    pinSabana.classList.add('clickable');
+                    pinSabana.addEventListener('mousedown', () => window.location.href = './content/pages/sabana.html');
+                }
+
+                // Pin Océano
+                const pinOceano = document.querySelector('#pin-oceano');
+                if (pinOceano) {
+                    pinOceano.classList.add('clickable');
+                    pinOceano.addEventListener('mousedown', () => window.location.href = './content/pages/oceano.html');
+                }
+
+                // Pin Dinosaurios
+                const pinDinosaurios = document.querySelector('#pin-dinosaurios');
+                if (pinDinosaurios) {
+                    pinDinosaurios.classList.add('clickable');
+                    pinDinosaurios.addEventListener('mousedown', () => window.location.href = './content/pages/dinosaurios.html');
+                }
+            });
+        </script>
 
     </a-scene>
 </body>

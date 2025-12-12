@@ -16,7 +16,7 @@
             margin: 0;
             overflow: hidden;
             /* Se mantiene el fondo de la página, pero la escena VR usará <a-sky> */
-            background-image: url(../assets/images/cielo_sabana.jpg); 
+            background-image: url(../assets/images/cielo_sabana.jpg);
             font-family: Arial, sans-serif;
         }
 
@@ -53,14 +53,17 @@
             z-index: 1000;
             color: white;
             background-color: rgba(0, 0, 0, 0.7);
-            padding: 15px 30px; /* Aumento de padding */
-            border-radius: 8px; /* Borde más redondeado */
+            padding: 15px 30px;
+            /* Aumento de padding */
+            border-radius: 8px;
+            /* Borde más redondeado */
             font-family: Arial, sans-serif;
             text-align: center;
-            font-size: 1.8em; 
+            font-size: 1.8em;
             font-weight: bold;
             letter-spacing: 2px;
-            border: 2px solid #FFC107; /* Color de borde amarillo/sabana */
+            border: 2px solid #FFC107;
+            /* Color de borde amarillo/sabana */
         }
     </style>
 
@@ -79,14 +82,14 @@
         <a-sky src="#cieloSabanaImg"></a-sky>
 
         <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#C2B280" shadow
-                 material="shader: standard; repeat: 50 50;"></a-plane>
-        
-        <a-entity light="type: directional; color: #FFF8E1; intensity: 1.5; castShadow: true" 
-                  position="10 20 -10"></a-entity>
+            material="shader: standard; repeat: 50 50;"></a-plane>
+
+        <a-entity light="type: directional; color: #FFF8E1; intensity: 1.5; castShadow: true"
+            position="10 20 -10"></a-entity>
         <a-entity light="type: ambient; color: #AAA; intensity: 0.8"></a-entity>
 
-        <a-gltf-model src="../assets/models/arbol_magico/scene.gltf" position="0 0 -10" rotation="0 0 0" scale="15 15 15"
-            shadow>
+        <a-gltf-model src="../assets/models/arbol_magico/scene.gltf" position="0 0 -10" rotation="0 0 0"
+            scale="15 15 15" shadow>
         </a-gltf-model>
 
         <a-plane id="link-juego" position="0 1.2 -7.5" rotation="0 0 0" width="2" height="0.8" color="darkgreen" shadow
@@ -95,8 +98,8 @@
                 font-weight="bold"></a-text>
         </a-plane>
 
-        <a-gltf-model src="../assets/models/lionsenior/scene.gltf" position="-10 0 -5" rotation="0 10 0" scale="0.1 0.1 0.1"
-            shadow>
+        <a-gltf-model src="../assets/models/lionsenior/scene.gltf" position="-10 0 -5" rotation="0 10 0"
+            scale="0.1 0.1 0.1" shadow>
         </a-gltf-model>
 
         <a-gltf-model src="../assets/models/elefante_asiatico/scene.gltf" position="12 0 -10" rotation="0 10 0"
@@ -137,6 +140,16 @@
             <a-entity id="rightHand" laser-controls="hand: right"
                 raycaster="objects: .clickable, .option-button; far: 5"></a-entity>
         </a-entity>
+
+        <script>
+            // VR click handler para el botón del juego
+            document.querySelector('a-scene').addEventListener('loaded', function () {
+                const linkJuego = document.querySelector('#link-juego');
+                if (linkJuego) {
+                    linkJuego.addEventListener('mousedown', () => window.location.href = './juego-leones.html');
+                }
+            });
+        </script>
 
     </a-scene>
 </body>
