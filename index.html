@@ -31,47 +31,38 @@
             <img id="mundoAnimalImg" src="./content/assets/images/mundoAnimal.jpg" alt="Imagen del mundo animal">
         </a-assets>
 
-        <!-- Cielo -->
         <a-sky color="#D4E6F1"></a-sky>
 
-        <!-- SUELO MEJORADO (Madera) -->
         <a-plane position="0 0 -4" rotation="-90 0 0" width="12" height="10" color="#8B6F47"
             material="roughness: 0.8; metalness: 0.1" shadow="receive: true">
         </a-plane>
 
-        <!-- PAREDES MEJORADAS -->
-        <!-- Pared trasera (con mapa) -->
         <a-plane position="0 2.5 -9" rotation="0 0 0" width="12" height="5" color="#E8DCC8" material="roughness: 0.9"
             shadow="receive: true">
         </a-plane>
 
-        <!-- Pared izquierda -->
         <a-plane position="-6 2.5 -4" rotation="0 90 0" width="10" height="5" color="#E8DCC8" material="roughness: 0.9"
             shadow="receive: true">
         </a-plane>
 
-        <!-- Pared derecha -->
         <a-plane position="6 2.5 -4" rotation="0 -90 0" width="10" height="5" color="#E8DCC8" material="roughness: 0.9"
             shadow="receive: true">
         </a-plane>
 
-        <!-- MAPA EN LA PARED -->
         <a-plane id="mapa-pared" position="0 2.5 -8.81" width="10" height="5" src="#mundoAnimalImg" shadow="cast: true">
         </a-plane>
 
-        <!-- Marco del mapa -->
         <a-box position="0 2.5 -8.84" width="10.2" height="5.2" depth="0.05" color="#654321"
             material="roughness: 0.3; metalness: 0.2">
         </a-box>
 
-        <!-- TÍTULO -->
         <a-text value="BIENVENIDOS AL ZOO VIRTUAL" align="center" font="mozillavr" color="#2C1810" width="7"
             position="0 4.8 -8.8" shadow="cast: true">
         </a-text>
 
-        <!-- PIN DE MAPA - SABANA -->
         <a-entity position="0 2.5 -8.7">
             <a-cone id="pin-sabana" radius-bottom="0.15" radius-top="0.02" height="0.2" color="#FF4500"
+                class="clickable"
                 link="href: ./content/pages/sabana.html"
                 animation__hover="property: scale; to: 1.2 1.2 1.2; startEvents: mouseenter; dur: 200"
                 animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200"
@@ -87,9 +78,9 @@
             </a-text>
         </a-entity>
 
-        <!-- PIN DE MAPA - OCEANO -->
         <a-entity position="1.7 1.8 -8.7">
             <a-cone id="pin-oceano" radius-bottom="0.15" radius-top="0.02" height="0.2" color="#006994"
+                class="clickable"
                 link="href: ./content/pages/oceano.html"
                 animation__hover="property: scale; to: 1.2 1.2 1.2; startEvents: mouseenter; dur: 200"
                 animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200"
@@ -105,9 +96,9 @@
             </a-text>
         </a-entity>
 
-        <!-- PIN DE MAPA - DINOSAURIOS -->
         <a-entity position="-1.5 3.5 -8.7">
             <a-cone id="pin-dinosaurios" radius-bottom="0.15" radius-top="0.02" height="0.2" color="#228B22"
+                class="clickable"
                 link="href: ./content/pages/dinosaurios.html"
                 animation__hover="property: scale; to: 1.2 1.2 1.2; startEvents: mouseenter; dur: 200"
                 animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200"
@@ -124,23 +115,15 @@
         </a-entity>
 
 
-        <!-- MUEBLES Y DECORACIÓN -->
-
-        <!-- Mesa de recepción (centro) -->
         <a-box position="0 0.5 -2" width="3" height="1" depth="1" color="#654321"
             material="roughness: 0.5; metalness: 0.1" shadow="cast: true; receive: true">
         </a-box>
 
-        <!-- Sillas laterales -->
-        <!-- Silla izquierda -->
         <a-entity position="-4 0 -1">
-            <!-- Asiento -->
             <a-box position="0 0.3 0" width="0.6" height="0.1" depth="0.6" color="#8B4513" shadow="cast: true">
             </a-box>
-            <!-- Respaldo -->
             <a-box position="0 0.6 -0.25" width="0.6" height="0.6" depth="0.1" color="#8B4513" shadow="cast: true">
             </a-box>
-            <!-- Patas -->
             <a-cylinder radius="0.03" height="0.3" position="-0.2 0.15 -0.2" color="#654321" shadow="cast: true">
             </a-cylinder>
             <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 -0.2" color="#654321" shadow="cast: true">
@@ -156,15 +139,11 @@
                 animation-mixer>
             </a-gltf-model>
         </a-entity>
-        <!-- Silla derecha -->
         <a-entity position="4 0 -1">
-            <!-- Asiento -->
             <a-box position="0 0.3 0" width="0.6" height="0.1" depth="0.6" color="#8B4513" shadow="cast: true">
             </a-box>
-            <!-- Respaldo -->
             <a-box position="0 0.6 -0.25" width="0.6" height="0.6" depth="0.1" color="#8B4513" shadow="cast: true">
             </a-box>
-            <!-- Patas -->
             <a-cylinder radius="0.03" height="0.3" position="-0.2 0.15 -0.2" color="#654321" shadow="cast: true">
             </a-cylinder>
             <a-cylinder radius="0.03" height="0.3" position="0.2 0.15 -0.2" color="#654321" shadow="cast: true">
@@ -175,73 +154,52 @@
             </a-cylinder>
         </a-entity>
 
-        <!-- Plantas decorativas -->
-        <!-- Planta izquierda -->
         <a-entity position="-5 0 -6">
-            <!-- Maceta -->
             <a-cylinder radius="0.3" height="0.5" color="#8B4513" shadow="cast: true">
             </a-cylinder>
-            <!-- Planta -->
             <a-cone radius-bottom="0.4" radius-top="0.1" height="1.2" position="0 0.85 0" color="#228B22"
                 shadow="cast: true">
             </a-cone>
         </a-entity>
 
-        <!-- Planta derecha -->
         <a-entity position="5 0 -6">
-            <!-- Maceta -->
             <a-cylinder radius="0.3" height="0.5" color="#8B4513" shadow="cast: true">
             </a-cylinder>
-            <!-- Planta -->
             <a-cone radius-bottom="0.4" radius-top="0.1" height="1.2" position="0 0.85 0" color="#228B22"
                 shadow="cast: true">
             </a-cone>
         </a-entity>
 
-        <!-- Estanterías laterales (más pegadas a la pared) -->
-        <!-- Estantería izquierda -->
         <a-box position="-5.95 1.5 -4" width="0.2" height="3" depth="2" color="#654321" material="roughness: 0.6"
             shadow="cast: true; receive: true">
         </a-box>
 
-        <!-- Estantería derecha -->
         <a-box position="5.95 1.5 -4" width="0.2" height="3" depth="2" color="#654321" material="roughness: 0.6"
             shadow="cast: true; receive: true">
         </a-box>
 
-        <!-- Lámparas de pie -->
-        <!-- Lámpara izquierda -->
         <a-entity position="-4 0 -6">
-            <!-- Base -->
             <a-cylinder radius="0.2" height="0.05" color="#654321" shadow="cast: true">
             </a-cylinder>
-            <!-- Poste -->
             <a-cylinder radius="0.03" height="1.8" position="0 0.9 0" color="#654321" shadow="cast: true">
             </a-cylinder>
-            <!-- Pantalla -->
             <a-cone radius-bottom="0.3" radius-top="0.15" height="0.4" position="0 1.9 0" color="#F5DEB3"
                 material="emissive: #FFD700; emissiveIntensity: 0.6" shadow="cast: true">
             </a-cone>
         </a-entity>
 
-        <!-- Lámpara derecha -->
         <a-entity position="4 0 -6">
-            <!-- Base -->
             <a-cylinder radius="0.2" height="0.05" color="#654321" shadow="cast: true">
             </a-cylinder>
-            <!-- Poste -->
             <a-cylinder radius="0.03" height="1.8" position="0 0.9 0" color="#654321" shadow="cast: true">
             </a-cylinder>
-            <!-- Pantalla -->
             <a-cone radius-bottom="0.3" radius-top="0.15" height="0.4" position="0 1.9 0" color="#F5DEB3"
                 material="emissive: #FFD700; emissiveIntensity: 0.6" shadow="cast: true">
             </a-cone>
         </a-entity>
 
-        <!-- ILUMINACIÓN MEJORADA -->
         <a-entity light="type: ambient; color: #FFF; intensity: 0.4"></a-entity>
 
-        <!-- Luces principales (desde lámparas) -->
         <a-entity light="type: point; color: #FFF8DC; intensity: 1.2; castShadow: true; shadowCameraVisible: false"
             position="-3 4.3 -4">
         </a-entity>
@@ -250,13 +208,10 @@
             position="3 4.3 -4">
         </a-entity>
 
-        <!-- Luz direccional para sombras generales -->
         <a-entity light="type: directional; color: #FFF; intensity: 0.5; castShadow: true" position="2 5 2">
         </a-entity>
 
-        <!-- VR RIG -->
         <a-entity id="rig" movement-controls="speed: 0.2; controls: checkpoint, gamepad, trackpad, keyboard, touch">
-            <!-- Camera -->
             <a-entity camera position="0 1.6 0" look-controls="pointerLockEnabled: false">
                 <a-entity cursor="fuse: false; rayOrigin: mouse;" position="0 0 -1"
                     geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
@@ -264,38 +219,11 @@
                 </a-entity>
             </a-entity>
 
-            <!-- Controllers -->
             <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable; far: 5"></a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable; far: 5"></a-entity>
         </a-entity>
 
-        <script>
-            // VR click handlers para los pins del mapa
-            document.querySelector('a-scene').addEventListener('loaded', function () {
-                // Pin Sabana
-                const pinSabana = document.querySelector('#pin-sabana');
-                if (pinSabana) {
-                    pinSabana.classList.add('clickable');
-                    pinSabana.addEventListener('mousedown', () => window.location.href = './content/pages/sabana.html');
-                }
-
-                // Pin Océano
-                const pinOceano = document.querySelector('#pin-oceano');
-                if (pinOceano) {
-                    pinOceano.classList.add('clickable');
-                    pinOceano.addEventListener('mousedown', () => window.location.href = './content/pages/oceano.html');
-                }
-
-                // Pin Dinosaurios
-                const pinDinosaurios = document.querySelector('#pin-dinosaurios');
-                if (pinDinosaurios) {
-                    pinDinosaurios.classList.add('clickable');
-                    pinDinosaurios.addEventListener('mousedown', () => window.location.href = './content/pages/dinosaurios.html');
-                }
-            });
-        </script>
-
-    </a-scene>
+        </a-scene>
 </body>
 
 </html>
