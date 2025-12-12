@@ -1,8 +1,13 @@
 🦁 Zoo Virtual - Experiencia Inmersiva en WebVR
+
 Una experiencia de zoológico virtual interactivo construida con A-Frame
+
 🚀 Demo en Vivo
+
 🎯 Sobre el Proyecto
+
 Zoo Virtual es una experiencia inmersiva en realidad virtual que te permite explorar y aprender sobre fauna salvaje desde tu navegador. Desarrollado como proyecto educativo para el módulo de Digitalización Aplicada al Sector Productivo, combina fotografía 360°, modelos 3D y navegación interactiva para crear un entorno de aprendizaje innovador.
+
 ✨ Características
 🌐 Imágenes 360° - Explora entornos naturales con fotografía panorámica inmersiva
 🦒 Modelos 3D Realistas - Interactúa con animales modelados en alta calidad
