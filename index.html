@@ -123,6 +123,62 @@
             </a-text>
         </a-entity>
 
+        <!-- 🎬 SECCIÓN EXPERIENCIAS 360° (Pared Derecha) -->
+        <a-text value="EXPERIENCIAS 360" align="center" font="mozillavr" color="#FFD700" width="6" position="5.9 4.2 -4"
+            rotation="0 -90 0">
+        </a-text>
+
+        <!-- Panel 1: Tiburones (Antes Océano) -->
+        <a-entity id="exp-oceano" position="5.9 3.5 -2" rotation="0 -90 0" class="clickable">
+            <a-plane width="1.8" height="0.7" color="#006994" material="opacity: 0.9"
+                animation__hover="property: scale; to: 1.1 1.1 1; startEvents: mouseenter; dur: 200"
+                animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200">
+            </a-plane>
+            <a-text value="TIBURONES" align="center" position="0 0.15 0.01" width="4" color="#FFFFFF"></a-text>
+            <a-text value="Encuentro Cercano" align="center" position="0 -0.15 0.01" width="3.5"
+                color="#CCFFFF"></a-text>
+        </a-entity>
+
+        <!-- Panel 2: Cara a Cara (Leones 1) -->
+        <a-entity id="exp-submarina" position="5.9 2.7 -2" rotation="0 -90 0" class="clickable">
+            <a-plane width="1.8" height="0.7" color="#FF8C00" material="opacity: 0.9"
+                animation__hover="property: scale; to: 1.1 1.1 1; startEvents: mouseenter; dur: 200"
+                animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200">
+            </a-plane>
+            <a-text value="CARA A CARA" align="center" position="0 0.15 0.01" width="4" color="#FFFFFF"></a-text>
+            <a-text value="Con Leones" align="center" position="0 -0.15 0.01" width="3.5" color="#FFE4B5"></a-text>
+        </a-entity>
+
+        <!-- Panel 3: Vida Salvaje (Elefantes) -->
+        <a-entity id="exp-bosque" position="5.9 1.9 -2" rotation="0 -90 0" class="clickable">
+            <a-plane width="1.8" height="0.7" color="#708090" material="opacity: 0.9"
+                animation__hover="property: scale; to: 1.1 1.1 1; startEvents: mouseenter; dur: 200"
+                animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200">
+            </a-plane>
+            <a-text value="VIDA SALVAJE" align="center" position="0 0.15 0.01" width="4" color="#000000"></a-text>
+            <a-text value="Elefantes" align="center" position="0 -0.15 0.01" width="3.5" color="#000000"></a-text>
+        </a-entity>
+
+        <!-- Panel 4: La Antartica (Pinguinos) -->
+        <a-entity id="exp-montana" position="5.9 1.1 -2" rotation="0 -90 0" class="clickable">
+            <a-plane width="1.8" height="0.7" color="#00BFFF" material="opacity: 0.9"
+                animation__hover="property: scale; to: 1.1 1.1 1; startEvents: mouseenter; dur: 200"
+                animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200">
+            </a-plane>
+            <a-text value="LA ANTARTIDA" align="center" position="0 0.15 0.01" width="4" color="#000000"></a-text>
+            <a-text value="Pinguinos" align="center" position="0 -0.15 0.01" width="3.5" color="#000000"></a-text>
+        </a-entity>
+
+        <!-- Panel 5: Llanura (Caballos) -->
+        <a-entity id="exp-desierto" position="5.9 0.3 -2" rotation="0 -90 0" class="clickable">
+            <a-plane width="1.8" height="0.7" color="#2E8B57" material="opacity: 0.9"
+                animation__hover="property: scale; to: 1.1 1.1 1; startEvents: mouseenter; dur: 200"
+                animation__hoverout="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200">
+            </a-plane>
+            <a-text value="LLANURA" align="center" position="0 0.15 0.01" width="4" color="#000000"></a-text>
+            <a-text value="Caballos" align="center" position="0 -0.15 0.01" width="3.5" color="#000000"></a-text>
+        </a-entity>
+
 
         <!-- MUEBLES Y DECORACIÓN -->
 
@@ -291,6 +347,41 @@
                 if (pinDinosaurios) {
                     pinDinosaurios.classList.add('clickable');
                     pinDinosaurios.addEventListener('mousedown', () => window.location.href = './content/pages/dinosaurios.html');
+                }
+
+                // Experiencia Océano
+                const expOceano = document.querySelector('#exp-oceano');
+                if (expOceano) {
+                    expOceano.addEventListener('click', () => window.location.href = './content/pages/experiencia-oceano.html');
+                    expOceano.addEventListener('mousedown', () => window.location.href = './content/pages/experiencia-oceano.html');
+                }
+
+                // Experiencia Submarina
+                const expSubmarina = document.querySelector('#exp-submarina');
+                if (expSubmarina) {
+                    expSubmarina.addEventListener('click', () => window.location.href = './content/pages/experiencia-submarina.html');
+                    expSubmarina.addEventListener('mousedown', () => window.location.href = './content/pages/experiencia-submarina.html');
+                }
+
+                // Experiencia Bosque
+                const expBosque = document.querySelector('#exp-bosque');
+                if (expBosque) {
+                    expBosque.addEventListener('click', () => window.location.href = './content/pages/experiencia-bosque.html');
+                    expBosque.addEventListener('mousedown', () => window.location.href = './content/pages/experiencia-bosque.html');
+                }
+
+                // Experiencia Montaña
+                const expMontana = document.querySelector('#exp-montana');
+                if (expMontana) {
+                    expMontana.addEventListener('click', () => window.location.href = './content/pages/experiencia-montana.html');
+                    expMontana.addEventListener('mousedown', () => window.location.href = './content/pages/experiencia-montana.html');
+                }
+
+                // Experiencia Desierto
+                const expDesierto = document.querySelector('#exp-desierto');
+                if (expDesierto) {
+                    expDesierto.addEventListener('click', () => window.location.href = './content/pages/experiencia-desierto.html');
+                    expDesierto.addEventListener('mousedown', () => window.location.href = './content/pages/experiencia-desierto.html');
                 }
             });
         </script>

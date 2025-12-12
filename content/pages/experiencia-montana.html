@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Experiencia 360° - Manada de Leones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        iframe {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 2000;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            background: rgba(139, 69, 19, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(160, 82, 45, 0.5);
+            border-radius: 50px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(139, 69, 19, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: rgba(139, 69, 19, 0.4);
+            border-color: rgba(160, 82, 45, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(139, 69, 19, 0.5);
+        }
+
+        .nav-btn:active {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+    <iframe
+        src="https://www.youtube.com/embed/XPhmpfiWEEw?autoplay=1&loop=1&playlist=XPhmpfiWEEw&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; xr-spatial-tracking"
+        allowfullscreen>
+    </iframe>
+
+    <div class="nav-buttons">
+        <a href="../../index.html" class="nav-btn">
+            <span>🏠</span>
+            <span>Volver al Zoo</span>
+        </a>
+    </div>
+</body>
+
+</html>
